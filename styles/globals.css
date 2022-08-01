@@ -1,0 +1,77 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+.ais-SearchBox-form {
+  display: grid;
+  width: 100%;
+  color: inherit;
+  background-color: inherit;
+}
+.ais-SearchBox {
+  width: 100%;
+}
+
+.ais-SearchBox-input {
+  height: 50px;
+  padding: 15px;
+  font-size: 20px;
+  border: 1px solid rgb(53, 21, 233);
+  border-radius: 5px;
+  appearance: none;
+}
+.ais-SearchBox-input:focus-visible {
+  outline: rgb(53, 21, 233) auto 1px;
+}
+.ais-SearchBox-submit {
+  display: none;
+  padding: 8px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+}
+
+.ais-SearchBox-reset {
+  display: none;
+}
+.ais-SearchBox-loadingIndicator {
+  display: none;
+}
+.ais-Hits {
+  width: 100%;
+  margin-top: 25px;
+}
+.ais-Hits-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 250px);
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  list-style-type: none;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  padding-inline-start: 0px;
+}
+
+.ais-Hits ol {
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.ais-Hits-item {
+  margin: 5px 0px;
+}
