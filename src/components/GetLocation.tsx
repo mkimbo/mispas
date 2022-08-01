@@ -30,6 +30,7 @@ export default function GetLocation({}: Props) {
         ...position,
       });
       if (response?.data) {
+        console.log("true");
         return true;
       } else {
         return false;

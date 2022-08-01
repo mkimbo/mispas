@@ -11,7 +11,8 @@ import { loadScript } from "../../../src/utils/functions";
 
 // This key was created specifically for the demo in mui.com.
 // You need to create a new one for your application.
-const GOOGLE_MAPS_API_KEY = "AIzaSyAQgODXh9o10m9Ixvi5ysEeoxcrQS3NhoY";
+const GOOGLE_MAPS_API_KEY =
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 const autocompleteService = { current: null };
 
