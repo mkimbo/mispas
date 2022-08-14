@@ -25,20 +25,19 @@ class AuthService {
       callback(userCred);
     });
   }
-
+  async saveUser(user: User) {
+    return await axios.post("/api/create_user", user);
+  }
   async loginWithGoogle() {
     return signInWithPopup(this.auth, new GoogleAuthProvider())
-      .then((userCred: UserCredential) => {
-        const saveUser = async (user: User) => {
-          const response = await axios.post(
-            "/api/create_user",
-            userCred.user
-          );
-        };
-        saveUser(userCred.user);
-        return {
+      .then(
+        (userCred: UserCredential) => this.saveUser(userCred.user)
+        /*  return {
           user: userCred.user,
-        };
+        }; */
+      )
+      .then((res) => {
+        return res;
       })
       .catch((error: Error) => {
         return {

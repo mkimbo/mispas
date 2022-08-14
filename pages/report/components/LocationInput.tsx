@@ -31,11 +31,14 @@ export interface PlaceType {
 }
 
 interface ILocationInputProps {
-  description: string;
-  structured_formatting: StructuredFormatting;
+  name: string;
+  label: string;
 }
 
-export default function LocationInput() {
+export default function LocationInput({
+  name,
+  label,
+}: ILocationInputProps) {
   const [value, setValue] = React.useState<PlaceType | null>(null);
   const [inputValue, setInputValue] = React.useState("");
   const [defaultValue, setDefaultValue] = React.useState("");
@@ -118,14 +121,14 @@ export default function LocationInput() {
 
   return (
     <Controller
-      name="lastSeenLocation"
+      name={name}
       control={control}
       rules={{ required: true }}
       defaultValue={defaultValue}
       render={({ field, fieldState: { error } }) => (
         <Autocomplete
           {...field}
-          id="google-map-demo"
+          id="location-input"
           sx={{ width: "100%" }}
           getOptionLabel={(option) =>
             typeof option === "string" ? option : option?.description
@@ -139,7 +142,7 @@ export default function LocationInput() {
           onChange={(event: any, newValue: PlaceType | null) => {
             setOptions(newValue ? [newValue, ...options] : options);
             setValue(newValue);
-            field.onChange(newValue.description);
+            field.onChange(newValue?.description);
             //setSelectedLocation(newValue);
             //handleSelectLocation(newValue);
           }}
@@ -151,7 +154,7 @@ export default function LocationInput() {
               {...params}
               //{...register("lastSeenLocation")}
               //name="lastSeenLocation"
-              label="Last seen location"
+              label={label}
               variant="standard"
               fullWidth
               required

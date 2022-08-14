@@ -14,6 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import SettingsIcon from "@mui/icons-material/Settings";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import ToggleTheme from "./ToggleTheme";
 import Link from "next/link";
@@ -21,6 +22,8 @@ import {
   GlobalProvider,
   useAppDispatch,
 } from "../context/GlobalContext";
+import { useRouter } from "next/router";
+import { useTranslation } from "../i18n";
 
 interface NavBarProps {
   toggleDrawer: () => void;
@@ -38,6 +41,8 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const t = useTranslation();
   React.useEffect(() => {
     const langCode = localStorage.getItem("mispas-language-code");
     if (langCode) {
@@ -85,7 +90,14 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem
+        onClick={() => {
+          router.replace("/settings");
+          handleMenuClose();
+        }}
+      >
+        Settings
+      </MenuItem>
     </Menu>
   );
 
@@ -106,35 +118,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <Link href="/">
-        <MenuItem>
-          <IconButton
-            size="large"
-            aria-label="show 4 new mails"
-            color="inherit"
-          >
-            <Badge badgeContent={4} color="error">
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <p>Home</p>
-        </MenuItem>
-      </Link>
-      <Link href="/missing">
-        <MenuItem>
-          <IconButton
-            size="large"
-            aria-label="show 17 new notifications"
-            color="inherit"
-          >
-            <Badge badgeContent={17} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Missing Persons</p>
-        </MenuItem>
-      </Link>
-      <Link href="/search">
+      <Link href="/profile">
         <MenuItem onClick={handleProfileMenuOpen}>
           <IconButton
             size="large"
@@ -145,7 +129,19 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
           >
             <AccountCircle />
           </IconButton>
-          <p>Search</p>
+          <p>{t("Profile")}</p>
+        </MenuItem>
+      </Link>
+      <Link href="/settings">
+        <MenuItem>
+          <IconButton
+            size="large"
+            aria-label="show 17 new notifications"
+            color="inherit"
+          >
+            <SettingsIcon />
+          </IconButton>
+          <p>{t("Settings")}</p>
         </MenuItem>
       </Link>
     </Menu>
@@ -184,7 +180,6 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
           </Search> */}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <ToggleTheme />
             <IconButton
               size="large"
               aria-label="show 17 new notifications"

@@ -15,6 +15,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import LocationInput, { PlaceType } from "./LocationInput";
 import CircularIntegration from "./CircularIntegration";
+import DateInput from "./DateInput";
 
 export default function MissingPersonDetails() {
   const [loading, setLoading] = useState(false);
@@ -163,40 +164,13 @@ export default function MissingPersonDetails() {
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <Controller
-            name="lastSeenDate"
-            control={control}
-            defaultValue={null}
-            render={({
-              field: { onChange, value },
-              fieldState: { error },
-            }) => (
-              <DatePicker
-                label="Last seen date"
-                value={value}
-                disableFuture
-                onChange={(value) => onChange(value)}
-                renderInput={(params) => (
-                  <TextField
-                    helperText={error ? error?.message : null}
-                    id="dateOfBirth"
-                    variant="standard"
-                    margin="dense"
-                    fullWidth
-                    color="primary"
-                    required
-                    {...params}
-                    error={!!error}
-                  />
-                )}
-              />
-            )}
-          />
-        </LocalizationProvider>
+        <DateInput name="lastSeenDate" label="Last seen date" />
       </Grid>
       <Grid item xs={12}>
-        <LocationInput />
+        <LocationInput
+          name="lastSeenLocation"
+          label="Last seen location"
+        />
       </Grid>
       <Grid item xs={12}>
         <Controller
@@ -208,7 +182,7 @@ export default function MissingPersonDetails() {
               required
               label={t("Last seen wearing")}
               fullWidth
-              multiline
+              //multiline
               //rows={4}
               variant="standard"
               error={!!error}
@@ -243,43 +217,6 @@ export default function MissingPersonDetails() {
           success={success}
           error={error || errors?.image ? true : false}
         />
-        {/*  <Controller
-          name="image"
-          control={control}
-          render={({ field, fieldState: { error: imageError } }) => (
-            <>
-              <TextField
-                {...field}
-                id="upload-missing-person-image"
-                sx={{ display: "none" }}
-                type="file"
-                onChange={(
-                  e: React.ChangeEvent<HTMLInputElement>
-                ) => {
-                  setLoading(true);
-                  const file = e.target.files[0];
-                  if (!file) {
-                    setLoading(false);
-                    setError(true);
-                    return;
-                  }
-                  setLoading(false);
-                  setSuccess(true);
-                  setError(false);
-                  console.log(file, "file");
-                  //setValue("image", file);
-                }}
-                fullWidth
-              />
-              <CircularIntegration
-                handleClick={handleClick}
-                loading={loading}
-                success={success}
-                error={error || !!imageError}
-              />
-            </>
-          )}
-        /> */}
       </Grid>
     </Grid>
   );

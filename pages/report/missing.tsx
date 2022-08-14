@@ -20,7 +20,6 @@ import {
   FormProvider,
   SubmitHandler,
 } from "react-hook-form";
-import { TLastSighting } from "../missing/[id]";
 import MissingPersonDetails from "./components/MissingPersonDetails";
 import { merge } from "lodash";
 import { useStepper } from "./hooks/useStepper";
@@ -57,20 +56,6 @@ export const updateData = async (data: any) => {
   return response;
 };
 
-const locationScema = z.object({
-  lng: z.string(),
-  lat: z.string(),
-  address: z.string(),
-});
-
-const MAX_FILE_SIZE = 200000;
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
-
 export const policeStations = [
   {
     value: "1",
@@ -86,69 +71,6 @@ const policeStationValues: string[] = policeStations.map(
   (item) => item.value
 );
 console.log(policeStationValues, "policeStationValues");
-
-export type TStep1Form = {
-  fullname: string;
-  age: string;
-  gender: string;
-  complexion: string;
-  lastSeenDate: string;
-  lastSeenLocation: string;
-  lastSeenWearing: string;
-  nickname: string;
-  image: File;
-};
-
-export type TStep2Form = {
-  phoneContact1: string;
-  phoneContact2: string;
-  obNumber: string;
-  policeStationName: string;
-  relationToReported?: string;
-};
-
-const Step1 = {
-  label: "Step 1",
-  validationSchema: z.object({
-    fullname: z.string().min(2).max(36),
-    nickname: z.string().max(36).optional(),
-    gender: z.enum(["Male", "Female", "Other"]),
-    age: z.string().min(1),
-    complexion: z.enum(["Light", "Dark"]),
-    image: z.any().refine((file) => !!file, "Image is required."),
-    lastSeenDate: z.date(),
-    lastSeenLocation: z.string().min(1),
-    lastSeenWearing: z.string().min(50).max(200),
-  }),
-  defaultValues: {
-    fullname: "James Howie",
-    gender: "Male",
-    complexion: "Light",
-    lastSeenDate: new Date(),
-    lastSeenLocation: "dksjfsk",
-    lastSeenWearing:
-      "fhg hfhhfhfh jhfghgfhfhf gjhgjhgjhfhj jhgghhf hfhfhfhff",
-    nickname: "Jamie",
-  },
-};
-
-const Step2 = {
-  label: "Step 2",
-  validationSchema: z.object({
-    phoneContact1: z.string().min(10).max(13),
-    phoneContact2: z.string().min(10).max(13),
-    obNumber: z.string().min(8).max(18),
-    policeStationName: z.string(),
-    relationToReported: z.string(),
-  }),
-  defaultValues: {
-    phoneContact1: "7989799879",
-    phoneContact2: "8090980986",
-    obNumber: "879797997",
-    policeStationName: "",
-    relationToReported: "Close Friend",
-  },
-};
 
 function getStepContent(step: number) {
   switch (step) {
@@ -183,11 +105,8 @@ function ReportMissing({}: Props) {
     defaultValues: getDefaultValues(steps),
   });
 
-  const { register, handleSubmit, control } = methods;
+  const { handleSubmit } = methods;
 
-  const onSubmit: SubmitHandler<TStep1Form | TStep2Form> = async (
-    data
-  ) => console.log(data);
   return (
     <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
       <FormProvider {...methods}>
@@ -244,6 +163,68 @@ function ReportMissing({}: Props) {
     </Container>
   );
 }
+
+export type TStep1Form = {
+  fullname: string;
+  age: string;
+  gender: string;
+  complexion: string;
+  lastSeenDate: string;
+  lastSeenLocation: string;
+  lastSeenWearing: string;
+  nickname: string;
+  image: File;
+};
+
+export type TStep2Form = {
+  phoneContact1: string;
+  phoneContact2: string;
+  obNumber: string;
+  policeStationName: string;
+  relationToReported?: string;
+};
+
+const Step1 = {
+  label: "Step 1",
+  validationSchema: z.object({
+    fullname: z.string().min(2).max(36),
+    nickname: z.string().max(36).optional(),
+    gender: z.enum(["Male", "Female", "Other"]),
+    age: z.string().min(1),
+    complexion: z.enum(["Light", "Dark"]),
+    image: z.any().refine((file) => !!file, "Image is required."),
+    lastSeenDate: z.date(),
+    lastSeenLocation: z.string().min(1),
+    lastSeenWearing: z.string().min(8).max(20),
+  }),
+  defaultValues: {
+    fullname: "James Howie",
+    gender: "Male",
+    complexion: "Light",
+    lastSeenDate: new Date(),
+    lastSeenLocation: "",
+    lastSeenWearing: "Blue Pants",
+    nickname: "",
+  },
+};
+
+const Step2 = {
+  label: "Step 2",
+  validationSchema: z.object({
+    phoneContact1: z.string().min(10).max(13),
+    phoneContact2: z.string().min(10).max(13),
+    obNumber: z.string().min(8).max(18),
+    policeStationName: z.string(),
+    relationToReported: z.string(),
+  }),
+  defaultValues: {
+    phoneContact1: "7989799879",
+    phoneContact2: "8090980986",
+    obNumber: "879797997",
+    policeStationName: "",
+    relationToReported: "Close Friend",
+  },
+};
 
 export default withProtected(ReportMissing);
 

@@ -10,7 +10,7 @@ type Props = {};
 
 export default function GetLocation({}: Props) {
   const t = useTranslation();
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const handleGetLocation = () => {
     const successCallback = async (geoPosition) => {
       //console.log(geoPocation, "location");
@@ -20,17 +20,18 @@ export default function GetLocation({}: Props) {
       };
       const geohash = getGeoHash(position);
       const _geoloc = {
-        geohash,
+        geohash: geohash,
         lat: geoPosition?.coords?.latitude,
         lng: geoPosition?.coords?.longitude,
       };
       const response = await axios.put("/api/create_user", {
         uid: user?.uid,
         _geoloc,
-        ...position,
+        enabledLocation: true,
       });
       if (response?.data) {
-        console.log("true");
+        setUser({ ...user, enabledLocation: true });
+        console.log("Location saved", user);
         return true;
       } else {
         return false;

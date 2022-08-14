@@ -10,6 +10,7 @@ import { TFormState } from "../hooks/useStepper";
 import { UseFormHandleSubmit } from "react-hook-form";
 import { TStep1Form, TStep2Form } from "../missing";
 import { saveData } from "../missing";
+import useAuth from "../../../src/hook/auth";
 
 interface IProps {
   state: TFormState;
@@ -24,10 +25,13 @@ const StepperActions: FunctionComponent<IProps> = ({
   handleSubmit,
   steps,
 }) => {
+  const { user } = useAuth();
+  console.log(user, "user");
   const handleSaveData = async () => {
     const downloadUrl = await uploadFileToCloud(state.data.image);
     const _geoloc = await getLatLong(state.data.lastSeenLocation);
     const geohash = getGeoHash(_geoloc);
+    const reporterId = user?.uid;
     const missingPersonData = {
       ...state.data,
       lastSeenLocation: {
@@ -39,6 +43,7 @@ const StepperActions: FunctionComponent<IProps> = ({
       _geoloc,
       sightings: [],
       found: false,
+      reporterId,
     };
     const response = await saveData(missingPersonData);
   };

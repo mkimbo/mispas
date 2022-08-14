@@ -1,24 +1,49 @@
-importScripts("https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/7.9.1/firebase-messaging.js");
-
-firebase.initializeApp({
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-});
-
+importScripts(
+  "https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/7.9.1/firebase-messaging.js"
+);
+if (!firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey: "AIzaSyCwydsAsfbSZHkCtPMNwhwxwR3Yb0k1MDk",
+    authDomain: "mispas-8a699.firebaseapp.com",
+    projectId: "mispas-8a699",
+    storageBucket: "mispas-8a699.appspot.com",
+    messagingSenderId: "74485160895",
+    appId: "1:74485160895:web:8f6ab6de357efe0f7d9f0a",
+    measurementId: "G-3LYJD197LR",
+  });
+}
 firebase.messaging();
 
 //background notifications will be received here
-firebase.messaging().setBackgroundMessageHandler((payload) => {
-  const { title, body } = JSON.parse(payload.data.notification);
-  var options = {
-    body,
-    icon: "/icons/launcher-icon-4x.png",
-  };
-  registration.showNotification(title, options);
+firebase.messaging().setBackgroundMessageHandler(async (message) => {
+  if (Notification.permission === "granted") {
+    if (navigator.serviceWorker)
+      navigator.serviceWorker
+        .getRegistration()
+        .then(async function (reg) {
+          if (reg)
+            await reg.showNotification(message.notification.title, {
+              body: message.notification.body,
+              icon: "/icons/launcher-icon-4x.png",
+            });
+        });
+  }
 });
+
+/* firebase.messaging().onBackgroundMessage(async (message) => {
+  if (Notification.permission === "granted") {
+    if (navigator.serviceWorker)
+      navigator.serviceWorker
+        .getRegistration()
+        .then(async function (reg) {
+          if (reg)
+            await reg.showNotification(message.notification.title, {
+              body: message.notification.body,
+              icon: "/icons/launcher-icon-4x.png",
+            });
+        });
+  }
+}); */

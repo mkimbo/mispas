@@ -18,25 +18,26 @@ const searchClient = algoliasearch(
 function Search() {
   const t = useTranslation();
   return (
-    <Container component="main" maxWidth="lg">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        overflowY: "auto",
+      }}
+      component="main"
+      maxWidth="lg"
+    >
+      <InstantSearch
+        searchClient={searchClient}
+        indexName={"reported_missing"}
       >
-        <InstantSearch
-          searchClient={searchClient}
-          indexName={"reported_missing"}
-        >
-          <Typography component="div" color="primary">
-            <SearchBox placeholder={t("search.placeholder.text")} />
-          </Typography>
+        <Typography component="div" color="primary">
+          <SearchBox placeholder={t("search.placeholder.text")} />
+        </Typography>
 
-          <Hits hitComponent={SearchHit} />
-        </InstantSearch>
-      </Box>
+        <Hits hitComponent={SearchHit} />
+      </InstantSearch>
     </Container>
   );
 }

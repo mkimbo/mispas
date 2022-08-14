@@ -31,12 +31,12 @@ function SearchHit({ hit }) {
   });
 
   const StyledContentWrapper = styled("div")({
-    padding: "2px",
+    padding: "5px",
   });
 
   return (
     <StyledCard elevation={0} key={hit?.objectID}>
-      <Link href={`/missing/${hit?.objectID}`}>
+      <Link href={`/case/${hit?.objectID}`}>
         <CardActionArea>
           <StyledImageWrapper>
             <Image

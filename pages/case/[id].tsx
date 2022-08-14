@@ -4,6 +4,7 @@ import {
   Container,
   Typography,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 import {
   where,
@@ -14,47 +15,24 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../../src/utils/firebase";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Check } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
+import Image from "next/image";
+import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import sampleMissing from "../../public/missing-person.webp";
 import { useTranslation } from "../../src/i18n";
+import useSWR from "swr";
+import { fetcher } from "../../src/utils/axios";
 import { format } from "date-fns";
+import { placeholderUrl } from "../../src/utils/constants";
+import { TPerson } from "../missing/[id]";
+import ReportSightingButton from "../../src/components/MissingPersonImage";
 import MissingPersonImage from "../../src/components/MissingPersonImage";
-interface IMissingPersonProps {
-  missingPerson: TPerson;
-}
-
-export type TLocation = {
-  lng: number;
-  lat: number;
-  address: string;
-  geohash: string;
-};
-
-export type TGeoLoc = {
-  lng: number;
-  lat: number;
-};
-
-export type TPerson = {
-  id: string;
-  fullname: string;
-  age: number;
-  complexion: string;
-  found?: boolean;
-  gender: string;
-  image: string;
-  lastSeenDate: string;
-  lastSeenWearing: string;
-  nickname?: string;
-  obNumber: string;
-  phoneContact1: number;
-  phoneContact2: number;
-  policeStationName: string;
-  relationToReported: string;
-  reporterID?: string;
-  lastSeenLocation: TLocation;
-};
+//interface MissingPerson {}
 
 const AgeComplexionWrapper = styled("div")({
   display: "inline-flex",
@@ -63,29 +41,50 @@ const AgeComplexionWrapper = styled("div")({
   margin: "0 auto",
 });
 
-const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
+const MissingCase = () => {
+  const theme = useTheme();
   const t = useTranslation();
   const router = useRouter();
-  const theme = useTheme();
+  const id = router.query.id as string;
+  const { data, error } = useSWR(`/api/case/${id}`, fetcher);
+  if (error)
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Typography>Error fetching data.</Typography>
+      </Box>
+    );
+  if (!data)
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
+  const missingPerson: TPerson = data;
+  if (missingPerson) {
+    const pronoun =
+      missingPerson.gender === "Male"
+        ? "He"
+        : missingPerson.gender === "Female"
+        ? "She"
+        : missingPerson.fullname;
 
-  if (router.isFallback) {
-    return <div>loading</div>;
-  } else {
-    if (missingPerson) {
-      const pronoun =
-        missingPerson.gender === "Male"
-          ? "He"
-          : missingPerson.gender === "Female"
-          ? "She"
-          : missingPerson.fullname;
-
-      const dateInWords = format(
-        new Date(missingPerson.lastSeenDate),
-        "do MMM yyyy"
-      );
-      return (
-        <Container component="main" maxWidth="md">
-          {missingPerson && (
+    const dateInWords = format(
+      new Date(missingPerson.lastSeenDate),
+      "do MMM yyyy"
+    );
+    return (
+      <Container component="main" maxWidth="md">
+        {missingPerson && (
+          <>
+            <div
+              style={{
+                position: "fixed",
+                bottom: "15px",
+                right: 0,
+              }}
+            >
+              {/*  <ReportSightingButton personId={missingPerson?.id} /> */}
+            </div>
             <Box
               sx={{
                 display: "flex",
@@ -113,6 +112,16 @@ const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
                   </span>
                   <Typography color="primary" display="inline-flex">
                     {missingPerson?.age}
+                  </Typography>
+                </span>
+                <span>
+                  <span
+                    style={{ fontWeight: 600, marginLeft: "8px" }}
+                  >
+                    {t("Gender: ")}{" "}
+                  </span>
+                  <Typography color="primary" display="inline-flex">
+                    {missingPerson?.gender}
                   </Typography>
                 </span>
                 <span>
@@ -166,56 +175,17 @@ const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
                 </Typography>
               </Card>
             </Box>
-          )}
-        </Container>
-      );
-    } else {
-      return (
-        <Container component="main" maxWidth="md">
-          <Typography textAlign="center">{t("NOT FOUND")}</Typography>
-        </Container>
-      );
-    }
-  }
-};
-export const getStaticPaths = async () => {
-  const q = query(
-    collection(db, "reported_missing"),
-    where("found", "==", false)
-  );
-
-  const querySnapshot = await getDocs(q);
-  const paths = querySnapshot.docs.map((doc) => ({
-    params: {
-      id: doc.id,
-    },
-  }));
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps = async (context) => {
-  const { id } = context.params;
-  const missingDoc = doc(db, `reported_missing/${id}`);
-  if (missingDoc) {
-    const snapShot = await getDoc(missingDoc);
-    return {
-      props: {
-        missingPerson: {
-          id: snapShot.id,
-          ...snapShot.data(),
-        },
-      },
-    };
+          </>
+        )}
+      </Container>
+    );
   } else {
-    return {
-      props: {
-        missingPerson: null,
-      },
-    };
+    return (
+      <Container component="main" maxWidth="md">
+        <Typography textAlign="center">{t("NOT FOUND")}</Typography>
+      </Container>
+    );
   }
 };
 
-export default MissingPerson;
+export default MissingCase;

@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import Link from "next/link";
+import AllowNotifications from "../src/components/AllowNotifications";
 import GetLocation from "../src/components/GetLocation";
 import {
   useAppContext,
@@ -30,6 +31,9 @@ export default function Home() {
       </Button>
       <br />
       <GetLocation />
+      <br />
+      <br />
+      <AllowNotifications />
       <br />
       <Link href="/search">Search</Link>
       <br />

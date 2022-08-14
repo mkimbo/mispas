@@ -121,7 +121,7 @@ const CircularIntegration: React.FunctionComponent<IProps> = ({
           disabled={loading}
           onClick={handleClick}
         >
-          {t("Upload person image")}
+          {success ? t("Upload successful") : t("Upload person image")}
         </Button>
         {loading && (
           <CircularProgress

@@ -1,4 +1,4 @@
-import geofire from "geofire-common";
+const geofire = require("geofire-common");
 export const loadScript = (
   src: string,
   position: HTMLElement | null,
@@ -15,14 +15,10 @@ export const loadScript = (
   position.appendChild(script);
 };
 
-export const getGeoHash = (_geoloc: google.maps.LatLngLiteral) => {
-  try {
-    const hash = geofire?.geohashForLocation([
-      _geoloc.lat,
-      _geoloc.lng,
-    ]);
-    return hash;
-  } catch (error) {
-    console.log("error getting geohash", error);
-  }
+export const getGeoHash = (_geoloc: { lat: number; lng: number }) => {
+  const hash = geofire?.geohashForLocation([
+    _geoloc.lat,
+    _geoloc.lng,
+  ]);
+  return hash;
 };
