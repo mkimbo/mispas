@@ -9,8 +9,6 @@ import { useFormContext, Controller } from "react-hook-form";
 import throttle from "lodash/throttle";
 import { loadScript } from "../../../src/utils/functions";
 
-// This key was created specifically for the demo in mui.com.
-// You need to create a new one for your application.
 const GOOGLE_MAPS_API_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -143,8 +141,6 @@ export default function LocationInput({
             setOptions(newValue ? [newValue, ...options] : options);
             setValue(newValue);
             field.onChange(newValue?.description);
-            //setSelectedLocation(newValue);
-            //handleSelectLocation(newValue);
           }}
           onInputChange={(event, newInputValue) => {
             setInputValue(newInputValue);
@@ -152,13 +148,10 @@ export default function LocationInput({
           renderInput={(params) => (
             <TextField
               {...params}
-              //{...register("lastSeenLocation")}
-              //name="lastSeenLocation"
               label={label}
               variant="standard"
               fullWidth
               required
-              //className="mt-3 mb-2"
               error={!!error}
             />
           )}
@@ -167,9 +160,7 @@ export default function LocationInput({
               <li {...props}>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <LocationOnIcon
-                    //className={classes.icon}
-                    />
+                    <LocationOnIcon />
                   </Grid>
                   <Grid item xs>
                     <span
@@ -178,7 +169,6 @@ export default function LocationInput({
                           ? option
                           : option?.description
                       }
-                      //style={{ fontWeight: part.highlight ? 700 : 400 }}
                     >
                       {typeof option === "string"
                         ? option
@@ -195,7 +185,6 @@ export default function LocationInput({
               </li>
             );
           }}
-          // onChange={(_event, data) => field.onChange(data?.code ?? '')}
         />
       )}
     />

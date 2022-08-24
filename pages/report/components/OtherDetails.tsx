@@ -20,6 +20,9 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "../../../src/i18n";
 import { MenuItem, Select } from "@mui/material";
+import policeStations from "../../../src/assets/pStations.json";
+import _ from "lodash";
+import AutoCompleteSelect, { TOption } from "./AutoCompleteSelect";
 
 export default function OtherDetails() {
   const t = useTranslation();
@@ -27,7 +30,9 @@ export default function OtherDetails() {
     control,
     formState: { errors },
   } = useFormContext();
-
+  const stations: TOption[] = _.cloneDeep(policeStations).filter(
+    (item) => item.label.includes("Police Station")
+  );
   return (
     <Grid container spacing={3} sx={{}}>
       <Grid item xs={12} sm={6}>
@@ -63,7 +68,11 @@ export default function OtherDetails() {
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-        <Controller
+        <AutoCompleteSelect
+          name="policeStationName"
+          options={stations}
+        />
+        {/*  <Controller
           name="policeStationName"
           control={control}
           render={({ field, fieldState: { error } }) => (
@@ -71,6 +80,7 @@ export default function OtherDetails() {
               <InputLabel id="police-station">
                 Police Station Name
               </InputLabel>
+          
               <Select
                 {...field}
                 labelId="station-name"
@@ -82,16 +92,16 @@ export default function OtherDetails() {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value="101">
-                  {t("Kona Mbaya Police Station")}
-                </MenuItem>
-                <MenuItem value="102">
-                  {t("Central Police Station")}
-                </MenuItem>
+                {stations.map((station) => (
+                  <MenuItem value={station?.value}>
+                    {station?.name}
+                  </MenuItem>
+                ))}
+
               </Select>
             </FormControl>
           )}
-        />
+        /> */}
       </Grid>
       <Grid item xs={12} sm={6}>
         <Controller

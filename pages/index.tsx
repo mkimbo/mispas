@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import Link from "next/link";
 import AllowNotifications from "../src/components/AllowNotifications";
 import GetLocation from "../src/components/GetLocation";
@@ -13,32 +13,18 @@ export default function Home() {
   const state = useAppContext();
   const t = useTranslation();
   return (
-    <div>
-      <Link href="/admin">admin</Link>
-      <br />
-      <Link href="/login">login</Link>
-      <br />
-      <Button
-        onClick={() => {
-          if (state.langCode === "en") {
-            dispatch({ type: "SET_LANG_CODE", payload: "sw" });
-          } else {
-            dispatch({ type: "SET_LANG_CODE", payload: "en" });
-          }
+    <Container component="main" maxWidth="md">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        {t("homepage.languageButton.text")}
-      </Button>
-      <br />
-      <GetLocation />
-      <br />
-      <br />
-      <AllowNotifications />
-      <br />
-      <Link href="/search">Search</Link>
-      <br />
-      <Link href="/missing">Missing</Link>
-      <br />
-    </div>
+        <Typography variant="h4" component="h1" gutterBottom>
+          {t("WELCOME TO MISPAS")}
+        </Typography>
+      </Box>
+    </Container>
   );
 }

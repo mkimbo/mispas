@@ -10,9 +10,6 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "../../../src/i18n";
 import { MenuItem, Select } from "@mui/material";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import LocationInput, { PlaceType } from "./LocationInput";
 import CircularIntegration from "./CircularIntegration";
 import DateInput from "./DateInput";
@@ -95,9 +92,6 @@ export default function MissingPersonDetails() {
                 {...field}
                 labelId="complexion-label"
                 id="complexion"
-                //value={age}
-                //onChange={handleChange}
-
                 label="Age"
                 required
                 error={!!error}
@@ -131,8 +125,6 @@ export default function MissingPersonDetails() {
                 labelId="gender-label"
                 id="gender"
                 error={!!error}
-                //value={age}
-                //onChange={handleChange}
                 label="Gender"
               >
                 <MenuItem value="">
@@ -182,8 +174,6 @@ export default function MissingPersonDetails() {
               required
               label={t("Last seen wearing")}
               fullWidth
-              //multiline
-              //rows={4}
               variant="standard"
               error={!!error}
             />
@@ -192,7 +182,6 @@ export default function MissingPersonDetails() {
       </Grid>
       <Grid item xs={12}>
         <input
-          //{...register("image")}
           id="upload-missing-person-image"
           style={{ display: "none" }}
           type="file"

@@ -11,6 +11,7 @@ import { UseFormHandleSubmit } from "react-hook-form";
 import { TStep1Form, TStep2Form } from "../missing";
 import { saveData } from "../missing";
 import useAuth from "../../../src/hook/auth";
+import { useRouter } from "next/router";
 
 interface IProps {
   state: TFormState;
@@ -26,7 +27,7 @@ const StepperActions: FunctionComponent<IProps> = ({
   steps,
 }) => {
   const { user } = useAuth();
-  console.log(user, "user");
+  const router = useRouter();
   const handleSaveData = async () => {
     const downloadUrl = await uploadFileToCloud(state.data.image);
     const _geoloc = await getLatLong(state.data.lastSeenLocation);
@@ -46,6 +47,9 @@ const StepperActions: FunctionComponent<IProps> = ({
       reporterId,
     };
     const response = await saveData(missingPersonData);
+    if (response?.status == 200) {
+      router.push(`/case/${response?.data?.id}`);
+    }
   };
 
   const getLatLong = async (address: string) => {
@@ -72,7 +76,6 @@ const StepperActions: FunctionComponent<IProps> = ({
           variant="contained"
           onClick={() => {
             handleSubmit((values) => {
-              console.log("values", values, state.data);
               dispatch({
                 type: "setData",
                 payload: values,

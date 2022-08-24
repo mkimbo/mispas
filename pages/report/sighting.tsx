@@ -26,6 +26,12 @@ import useSWR from "swr";
 import { TPerson } from "../missing/[id]";
 import useAuth from "../../src/hook/auth";
 import axios, { AxiosResponse } from "axios";
+
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 type Props = {};
 
 export type TReportSighting = {
@@ -48,6 +54,11 @@ function ReportSighting({}: Props) {
   const router = useRouter();
   const t = useTranslation();
   const id = router.query.personId as string;
+  const methods = useForm<TReportSighting>({
+    resolver: zodResolver(schema),
+    reValidateMode: "onChange",
+    defaultValues: { sightingLocation: "", sightingDate: "" },
+  });
   const { data, error } = useSWR(`/api/case/${id}`, fetcher);
   if (error)
     return (
@@ -61,13 +72,9 @@ function ReportSighting({}: Props) {
         <CircularProgress />
       </Box>
     );
-  const missingPerson: TPerson = data;
+  const missingPerson = data;
+  console.log(missingPerson, "missing");
 
-  const methods = useForm<TReportSighting>({
-    resolver: zodResolver(schema),
-    reValidateMode: "onChange",
-    defaultValues: { sightingLocation: "", sightingDate: "" },
-  });
   const { handleSubmit } = methods;
   const handleSubmitSighting = async (data: TReportSighting) => {
     const response = await saveSighting({
@@ -76,7 +83,7 @@ function ReportSighting({}: Props) {
       reporterID: user?.uid,
     });
     if (response.status === 200) {
-      router.push("/");
+      router.push(`/case/${id}`);
     }
   };
   return (
@@ -92,7 +99,9 @@ function ReportSighting({}: Props) {
             }}
           >
             <Typography variant="h6" align="center" gutterBottom>
-              {t("Report a missing person sighting")}
+              {t(
+                `Please tell us where you saw ${missingPerson?.fullname}`
+              )}
             </Typography>
             <Grid item xs={12} marginBottom="10px">
               <LocationInput

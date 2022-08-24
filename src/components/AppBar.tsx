@@ -24,6 +24,7 @@ import {
 } from "../context/GlobalContext";
 import { useRouter } from "next/router";
 import { useTranslation } from "../i18n";
+import useAuth from "../hook/auth";
 
 interface NavBarProps {
   toggleDrawer: () => void;
@@ -43,6 +44,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
   const dispatch = useAppDispatch();
   const router = useRouter();
   const t = useTranslation();
+  const { logout } = useAuth();
   React.useEffect(() => {
     const langCode = localStorage.getItem("mispas-language-code");
     if (langCode) {
@@ -71,6 +73,9 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
   ) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -97,6 +102,14 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
         }}
       >
         Settings
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          handleLogout();
+        }}
+      >
+        Logout
       </MenuItem>
     </Menu>
   );
@@ -169,15 +182,6 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
           >
             MISPAS
           </Typography>
-          {/*  <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search> */}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton

@@ -23,6 +23,7 @@ import {
   PersonSearch,
   PersonPinCircle,
   CrisisAlert,
+  Public,
 } from "@mui/icons-material";
 //import Link from "@mui/material/Link";
 import { useRouter } from "next/dist/client/router";
@@ -66,7 +67,7 @@ const navLinks: TNavLink[] = [
     icon: <Home />,
   },
   {
-    text: "Amber Alert",
+    text: "Create Alert",
     href: "/report/missing",
     icon: <CrisisAlert />,
   },
@@ -81,9 +82,9 @@ const navLinks: TNavLink[] = [
     icon: <PersonSearch />,
   },
   {
-    text: "Admin",
-    href: "/admin",
-    icon: <PersonSearch />,
+    text: "Utilities",
+    href: "/utilities",
+    icon: <Public />,
   },
 ];
 
