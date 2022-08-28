@@ -27,6 +27,7 @@ import StepperActions from "./components/StepperActions";
 import OtherDetails from "./components/OtherDetails";
 import axios, { AxiosResponse } from "axios";
 import { withProtected } from "../../src/hook/route";
+import Link from "next/link";
 type Props = {};
 
 export interface IReportMissing {
@@ -56,38 +57,9 @@ export const updateData = async (data: any) => {
   return response;
 };
 
-export const policeStations = [
-  {
-    value: "1",
-    label: "Kona Mbaya Police Statio",
-  },
-  {
-    value: "2",
-    label: "Central Police Station",
-  },
-];
-
-const policeStationValues: string[] = policeStations.map(
-  (item) => item.value
-);
-console.log(policeStationValues, "policeStationValues");
-
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return <MissingPersonDetails />;
-    case 1:
-      return <OtherDetails />;
-    case 2:
-      return "<Review />";
-    default:
-      throw new Error("Unknown step");
-  }
-}
-
 function ReportMissing({}: Props) {
   const t = useTranslation();
-  const steps = [Step1, Step2];
+  const steps = [Step1, Step2, Step3];
   //const [activeStep, setActiveStep] = React.useState(0);
   const [state, dispatch] = useStepper();
 
@@ -106,6 +78,32 @@ function ReportMissing({}: Props) {
   });
 
   const { handleSubmit } = methods;
+
+  function getStepContent(step: number) {
+    switch (step) {
+      case 0:
+        return <MissingPersonDetails />;
+      case 1:
+        return <OtherDetails />;
+      case 2:
+        return (
+          <React.Fragment>
+            <Typography variant="h5" gutterBottom>
+              Your case has been reported succesfully.
+            </Typography>
+            <Typography variant="subtitle1">
+              Alerts will be sent out to nearby users in a few
+              minutes. You can view the new case using the link below.
+            </Typography>
+            <Link href={`/case/${state?.newCaseID}`}>
+              <a>View Case</a>
+            </Link>
+          </React.Fragment>
+        );
+      default:
+        throw new Error("Unknown step");
+    }
+  }
 
   return (
     <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
@@ -134,28 +132,13 @@ function ReportMissing({}: Props) {
               ))}
             </Stepper>
             <React.Fragment>
-              {state.activeStep === steps.length ? (
-                <React.Fragment>
-                  <Typography variant="h5" gutterBottom>
-                    Thank you for your order.
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    Your order number is #2001539. We have emailed
-                    your order confirmation, and will send you an
-                    update when your order has shipped.
-                  </Typography>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  {getStepContent(state.activeStep)}
-                  <StepperActions
-                    dispatch={dispatch}
-                    steps={steps}
-                    state={state}
-                    handleSubmit={handleSubmit}
-                  />
-                </React.Fragment>
-              )}
+              {getStepContent(state.activeStep)}
+              <StepperActions
+                dispatch={dispatch}
+                steps={steps}
+                state={state}
+                handleSubmit={handleSubmit}
+              />
             </React.Fragment>
           </Paper>
         </form>
@@ -210,6 +193,24 @@ const Step1 = {
 
 const Step2 = {
   label: "Step 2",
+  validationSchema: z.object({
+    phoneContact1: z.string().min(10).max(13),
+    phoneContact2: z.string().min(10).max(13),
+    obNumber: z.string().min(8).max(18),
+    policeStationName: z.string(),
+    relationToReported: z.string(),
+  }),
+  defaultValues: {
+    phoneContact1: "7989799879",
+    phoneContact2: "8090980986",
+    obNumber: "879797997",
+    policeStationName: "",
+    relationToReported: "Close Friend",
+  },
+};
+
+const Step3 = {
+  label: "Step 3",
   validationSchema: z.object({
     phoneContact1: z.string().min(10).max(13),
     phoneContact2: z.string().min(10).max(13),

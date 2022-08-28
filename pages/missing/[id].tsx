@@ -57,11 +57,20 @@ export type TPerson = {
 };
 
 const AgeComplexionWrapper = styled("div")({
-  display: "inline-flex",
-  alignItems: "center",
-  width: "fit-content",
-  margin: "0 auto",
+  width: "100%",
+  display: "inline",
+  textAlign: "center",
 });
+
+const InlineTypography = styled("div")({
+  width: "100%",
+  display: "inline",
+  textAlign: "center",
+});
+
+const ColouredSpan = styled("span")(({ theme }) => ({
+  color: theme.palette.primary.main,
+}));
 
 const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
   const t = useTranslation();
@@ -111,9 +120,15 @@ const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
                   <span style={{ fontWeight: 600 }}>
                     {t("search.age.label")}{" "}
                   </span>
-                  <Typography color="primary" display="inline-flex">
-                    {missingPerson?.age}
-                  </Typography>
+                  <ColouredSpan>{missingPerson?.age}</ColouredSpan>
+                </span>
+                <span>
+                  <span
+                    style={{ fontWeight: 600, marginLeft: "8px" }}
+                  >
+                    {t("Gender: ")}{" "}
+                  </span>
+                  <ColouredSpan>{missingPerson?.gender}</ColouredSpan>
                 </span>
                 <span>
                   <span
@@ -121,9 +136,9 @@ const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
                   >
                     {t("search.complexion.label")}{" "}
                   </span>
-                  <Typography color="primary" display="inline-flex">
+                  <ColouredSpan>
                     {missingPerson?.complexion}
-                  </Typography>
+                  </ColouredSpan>
                 </span>
               </AgeComplexionWrapper>
               <span
@@ -165,6 +180,43 @@ const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
                     missingPerson?.lastSeenLocation?.address}
                 </Typography>
               </Card>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                }}
+              >
+                {t("The matter has been reported to the police.")}
+              </Typography>
+              <InlineTypography>
+                <span>
+                  {t("Anyone with information please call")}{" "}
+                </span>
+                &nbsp;
+                <ColouredSpan>
+                  {t(
+                    "Missing Child Kenya Toll free line 0800-22-33-44"
+                  )}
+                </ColouredSpan>
+              </InlineTypography>
+              <InlineTypography>
+                <ColouredSpan>{t("(NO CHARGE)")}</ColouredSpan>&nbsp;
+                <span>{t("send a message to their")}</span>&nbsp;
+                <ColouredSpan>
+                  {t("WHATSAPP MESSAGE ONLY LINE 0704-447-417")}
+                </ColouredSpan>
+              </InlineTypography>
+              <InlineTypography>
+                <span>{t("or contact your nearest")}</span>&nbsp;
+                <ColouredSpan>
+                  {t("Police Station")}&nbsp;
+                </ColouredSpan>
+                <span>{t("or")}&nbsp;</span>
+                <ColouredSpan>
+                  {t(
+                    "Directorate of Children's Services (DCS) Sub County Children's Office."
+                  )}
+                </ColouredSpan>
+              </InlineTypography>
             </Box>
           )}
         </Container>

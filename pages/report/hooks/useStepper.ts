@@ -3,7 +3,9 @@ import { IReportMissing } from "../missing";
 
 export type TFormState = {
   activeStep: number;
+  loading: boolean;
   data: IReportMissing;
+  newCaseID: string | null;
 };
 
 export const useStepper = () => {
@@ -20,6 +22,18 @@ export const useStepper = () => {
             ...state,
             activeStep: state.activeStep - 1,
           };
+        case "loading":
+          return {
+            ...state,
+            loading: payload,
+          };
+        case "success":
+          return {
+            ...state,
+            loading: payload.loading,
+            newCaseID: payload.newCaseID,
+            activeStep: state.activeStep + 1,
+          };
         case "setData":
           return {
             ...state,
@@ -34,7 +48,9 @@ export const useStepper = () => {
     },
     {
       activeStep: 0,
+      loading: false,
       data: {},
+      newCaseID: null,
     }
   );
 };

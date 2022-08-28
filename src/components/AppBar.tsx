@@ -25,6 +25,7 @@ import {
 import { useRouter } from "next/router";
 import { useTranslation } from "../i18n";
 import useAuth from "../hook/auth";
+import { Button } from "@mui/material";
 
 interface NavBarProps {
   toggleDrawer: () => void;
@@ -44,7 +45,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
   const dispatch = useAppDispatch();
   const router = useRouter();
   const t = useTranslation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   React.useEffect(() => {
     const langCode = localStorage.getItem("mispas-language-code");
     if (langCode) {
@@ -183,27 +184,50 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
             MISPAS
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+          <Box
+            sx={{
+              display: {
+                xs: "none",
+                md: "flex",
+                alignItems: "center",
+              },
+            }}
+          >
+            {user && (
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                color="inherit"
+              >
+                <Badge color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            )}
+            {user ? (
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            ) : (
+              <Button
+                size="small"
+                sx={{ height: "30px" }}
+                aria-label="login"
+                onClick={() => router.push("/login")}
+                color="inherit"
+                variant="outlined"
+              >
+                Login
+              </Button>
+            )}
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

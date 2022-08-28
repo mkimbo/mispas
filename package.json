@@ -31,6 +31,7 @@
     "nanoid": "^4.0.0",
     "next": "^12.2.0",
     "next-pwa": "^5.5.4",
+    "next-share": "^0.18.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",
