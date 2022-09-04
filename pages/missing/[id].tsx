@@ -20,6 +20,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "../../src/i18n";
 import { format } from "date-fns";
 import MissingPersonImage from "../../src/components/MissingPersonImage";
+import SEO from "../../src/components/SEO";
 interface IMissingPersonProps {
   missingPerson: TPerson;
 }
@@ -92,8 +93,23 @@ const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
         new Date(missingPerson.lastSeenDate),
         "do MMM yyyy"
       );
+      const description =
+        pronoun +
+        " was reported missing on " +
+        dateInWords +
+        " near " +
+        missingPerson?.lastSeenLocation?.address;
       return (
         <Container component="main" maxWidth="md">
+          {missingPerson && (
+            <SEO
+              title={missingPerson.fullname}
+              description={description}
+              slug={`/case/${missingPerson.id}`}
+              images={[missingPerson.image]}
+              missingPerson={missingPerson}
+            />
+          )}
           {missingPerson && (
             <Box
               sx={{
@@ -173,11 +189,7 @@ const MissingPerson = ({ missingPerson }: IMissingPersonProps) => {
                     textAlign: "center",
                   }}
                 >
-                  {pronoun +
-                    " was last seen on " +
-                    dateInWords +
-                    " near " +
-                    missingPerson?.lastSeenLocation?.address}
+                  {description}
                 </Typography>
               </Card>
               <Typography

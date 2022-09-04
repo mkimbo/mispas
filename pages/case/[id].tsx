@@ -32,6 +32,7 @@ import { placeholderUrl } from "../../src/utils/constants";
 import { TPerson } from "../missing/[id]";
 import ReportSightingButton from "../../src/components/MissingPersonImage";
 import MissingPersonImage from "../../src/components/MissingPersonImage";
+import SEO from "../../src/components/SEO";
 //interface MissingPerson {}
 
 const AgeComplexionWrapper = styled("div")({
@@ -81,10 +82,23 @@ const MissingCase = () => {
       new Date(missingPerson.lastSeenDate),
       "do MMM yyyy"
     );
+    const description =
+      pronoun +
+      " was reported missing on " +
+      dateInWords +
+      " near " +
+      missingPerson?.lastSeenLocation?.address;
     return (
       <Container component="main" maxWidth="md">
         {missingPerson && (
           <>
+            <SEO
+              title={missingPerson.fullname}
+              description={description}
+              slug={`/case/${id}`}
+              images={[missingPerson.image]}
+              missingPerson={missingPerson}
+            />
             <div
               style={{
                 position: "fixed",
@@ -172,11 +186,7 @@ const MissingCase = () => {
                     textAlign: "center",
                   }}
                 >
-                  {pronoun +
-                    " was last seen on " +
-                    dateInWords +
-                    " near " +
-                    missingPerson?.lastSeenLocation?.address}
+                  {description}
                 </Typography>
               </Card>
               <Typography

@@ -30,7 +30,7 @@ import { ColorModeContext } from "../styles/color-context";
 import { firebaseCloudMessaging } from "../src/utils/webPush";
 import firebase from "firebase/app";
 import { getMessaging, onMessage } from "firebase/messaging";
-
+import { DefaultSeo } from "next-seo";
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
@@ -110,6 +110,19 @@ export default function MyApp(props: MyAppProps) {
           content="initial-scale=1, width=device-width"
         />
       </Head>
+      <DefaultSeo
+        openGraph={{
+          type: "website",
+          locale: "en_EN",
+          url: "https://www.url.ie/",
+          site_name: "Mispas",
+        }}
+        twitter={{
+          handle: "@handle",
+          site: "https://www.url.ie/",
+          cardType: "summary_large_image",
+        }}
+      />
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
