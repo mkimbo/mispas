@@ -88,15 +88,7 @@ const navLinks: TNavLink[] = [
   },
 ];
 
-function DashboardContent({ children }) {
-  const [open, setOpen] = React.useState(false);
-  const t = useTranslation();
-
-  const toggleDrawer = () => {
-    console.log("toggle called");
-    setOpen(!open);
-  };
-
+const MenuDrawer: React.FunctionComponent<{open: boolean, toggleDrawer: () => void}> = ({open, toggleDrawer}) => {
   const list = () => (
     <Box
       sx={{ width: 250 }}
@@ -117,27 +109,44 @@ function DashboardContent({ children }) {
         ))}
       </List>
       <Divider />
-      {/*  <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <Mail />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List> */}
+      
     </Box>
   );
-  console.log("toggleDrawer", open);
+  return (
+    <Drawer anchor="left" open={open} onClose={toggleDrawer}>
+      {list()}
+    </Drawer>
+  )
+}
+
+function HomePageContent({ children }) {
+  const [open, setOpen] = React.useState(false);
+  const toggleDrawer = () => {
+    console.log("toggle called");
+    setOpen(!open);
+  };
+
   return (
     <>
       <NavBar toggleDrawer={toggleDrawer} />
-      <Drawer anchor="left" open={open} onClose={toggleDrawer}>
-        {list()}
-      </Drawer>
+      <MenuDrawer open={open} toggleDrawer={toggleDrawer} />
+      <main>{children}</main>
+    </>
+  )
+}
+
+
+function DashboardContent({ children }) {
+  const [open, setOpen] = React.useState(false);
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
+  const t = useTranslation();
+
+  return (
+    <>
+      <NavBar toggleDrawer={toggleDrawer} />
+      <MenuDrawer open={open} toggleDrawer={toggleDrawer} />
       <Box
         component="main"
         sx={{
@@ -158,10 +167,9 @@ export default function Dashboard({ children }) {
   const auth = useAuth();
 
   const router = useRouter();
-  return <DashboardContent children={children} />;
-  /* if (router.pathname !== "/login") {
-   
+  if (router.pathname !== "/") {
+    return <DashboardContent children={children} />
   } else {
-    return <DashboardContent children={children} />;
-  } */
+    return <HomePageContent children={children} />;
+  }
 }
