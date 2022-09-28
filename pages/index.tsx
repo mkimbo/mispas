@@ -113,7 +113,7 @@ export default function Home() {
             {t("MISPAS")}
           </Typography>
           <Typography variant="h4" sx={{ color: "#fff" }}>
-            {t("Missing Person Alert System")}
+            {t("Missing Persons Alert System")}
           </Typography>
           <Button
             sx={{ textTransform: "none" }}

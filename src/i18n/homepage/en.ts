@@ -5,7 +5,7 @@ export default {
     "Create a new missing person alert.",
   "homepage.linkCard.missingPersonsTitle": "View",
   "homepage.linkCard.missingPersonsText":
-    "Active reports of missing people.",
+    "Active cases of missing persons.",
   "homepage.linkCard.searchTitle": "Search",
   "homepage.linkCard.searchText":
     "Search the database of reported cases.",

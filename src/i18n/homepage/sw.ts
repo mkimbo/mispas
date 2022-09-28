@@ -5,7 +5,7 @@ export default {
     "Unda arifa mpya kuhusu aliyepotea.",
   "homepage.linkCard.missingPersonsTitle": "Tazama",
   "homepage.linkCard.missingPersonsText":
-    "Ripoti amilifu za watu waliopotea.",
+    "Kesi amilifu za watu waliopotea.",
   "homepage.linkCard.searchTitle": "Tafuta",
   "homepage.linkCard.searchText":
     "Tafuta kwenye hifadhidata ya kesi zilizoripotiwa.",
