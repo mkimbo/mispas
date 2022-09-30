@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import GithubIcon from "@mui/icons-material/Github";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -71,7 +71,12 @@ const Login = ({ auth }) => {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit}
+          sx={{ mt: 3 }}
+        >
           <Button
             fullWidth
             variant="outlined"
@@ -107,7 +112,7 @@ const Login = ({ auth }) => {
             sx={{ mt: 1, mb: 1, width: "100%" }}
             onClick={loginWithGoogle}
             disabled={true}
-            startIcon={<GithubIcon />}
+            startIcon={<GitHubIcon />}
           >
             Github
           </Button>
