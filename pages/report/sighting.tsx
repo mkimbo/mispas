@@ -19,8 +19,8 @@ import {
 } from "react-hook-form";
 import { withProtected } from "../../src/hook/route";
 import { useRouter } from "next/router";
-import LocationInput from "./components/LocationInput";
-import DateInput from "./components/DateInput";
+import LocationInput from "../../src/components/report/LocationInput";
+import DateInput from "../../src/components/report/DateInput";
 import { fetcher } from "../../src/utils/axios";
 import useSWR from "swr";
 import { TPerson } from "../missing/[id]";

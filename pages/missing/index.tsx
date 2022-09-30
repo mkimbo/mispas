@@ -11,7 +11,7 @@ import { useTranslation } from "../../src/i18n";
 import { styled } from "@mui/material";
 import Image from "next/image";
 import axios from "axios";
-import MissingCard from "./components/MissingCard";
+import MissingCard from "../../src/components/missing/MissingCard";
 
 const MissingPeople = styled("div")({
   display: "grid",

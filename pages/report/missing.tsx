@@ -20,14 +20,15 @@ import {
   FormProvider,
   SubmitHandler,
 } from "react-hook-form";
-import MissingPersonDetails from "./components/MissingPersonDetails";
+//import MissingPersonDetails from "../../src/components/missing/MissingPersonDetails";
 import { merge } from "lodash";
-import { useStepper } from "./hooks/useStepper";
-import StepperActions from "./components/StepperActions";
-import OtherDetails from "./components/OtherDetails";
+import { useStepper } from "../../src/hook/report/useStepper";
+import StepperActions from "../../src/components/report/StepperActions";
+import OtherDetails from "../../src/components/report/OtherDetails";
 import axios, { AxiosResponse } from "axios";
 import { withProtected } from "../../src/hook/route";
 import Link from "next/link";
+import MissingPersonDetails from "../../src/components/report/MissingPersonDetails";
 type Props = {};
 
 export interface IReportMissing {
@@ -71,7 +72,7 @@ function ReportMissing({}: Props) {
 
     return { ...defaultValues };
   };
-  const methods = useForm<TStep1Form | TStep2Form>({
+  const methods = useForm<TStep1Form | TStep2Form | any>({
     resolver: zodResolver(steps[state.activeStep].validationSchema),
     reValidateMode: "onChange",
     defaultValues: getDefaultValues(steps),

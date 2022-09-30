@@ -6,7 +6,7 @@ import {
   SearchBox,
   Hits,
 } from "react-instantsearch-hooks-web";
-import SearchHit from "./components/SearchHit";
+import SearchHit from "../../src/components/search/SearchHit";
 import { useTranslation } from "../../src/i18n";
 import { withProtected } from "../../src/hook/route";
 
