@@ -1,3 +1,4 @@
+//
 import { useCallback, useMemo } from "react";
 import { translate } from ".";
 import { useAppContext } from "../context/GlobalContext";
@@ -12,10 +13,7 @@ export type TLangCode = "en" | "sw";
 
 export const useTranslation = () => {
   const langCode = useLangCode();
-  return useCallback(
-    () => translate.bind(null, langCode),
-    [langCode]
-  );
+  return useMemo(() => translate.bind(null, langCode), [langCode]);
 };
 
 export const useLangCode = () => useAppContext().langCode;
