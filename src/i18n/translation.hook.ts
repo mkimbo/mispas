@@ -21,8 +21,8 @@ export const useTranslateWithJsonsFunc = <T = any>(): ((
   json: TLangAny<T>
 ) => T) => {
   const langCode = useLangCode();
-  return useCallback(
-    (json) => json[langCode] || json["en"] || json["sw"],
+  return useMemo(
+    () => (json) => json[langCode] || json["en"] || json["sw"],
     [langCode]
   );
 };

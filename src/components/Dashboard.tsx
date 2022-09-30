@@ -88,7 +88,10 @@ const navLinks: TNavLink[] = [
   },
 ];
 
-const MenuDrawer: React.FunctionComponent<{open: boolean, toggleDrawer: () => void}> = ({open, toggleDrawer}) => {
+const MenuDrawer: React.FunctionComponent<{
+  open: boolean;
+  toggleDrawer: () => void;
+}> = ({ open, toggleDrawer }) => {
   const list = () => (
     <Box
       sx={{ width: 250 }}
@@ -98,7 +101,7 @@ const MenuDrawer: React.FunctionComponent<{open: boolean, toggleDrawer: () => vo
     >
       <List>
         {navLinks.map((item, index) => (
-          <Link key={item.href} href={item.href}>
+          <Link passHref key={item.href} href={item.href}>
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>{item.icon}</ListItemIcon>
@@ -109,15 +112,14 @@ const MenuDrawer: React.FunctionComponent<{open: boolean, toggleDrawer: () => vo
         ))}
       </List>
       <Divider />
-      
     </Box>
   );
   return (
     <Drawer anchor="left" open={open} onClose={toggleDrawer}>
       {list()}
     </Drawer>
-  )
-}
+  );
+};
 
 function HomePageContent({ children }) {
   const [open, setOpen] = React.useState(false);
@@ -132,9 +134,8 @@ function HomePageContent({ children }) {
       <MenuDrawer open={open} toggleDrawer={toggleDrawer} />
       <main>{children}</main>
     </>
-  )
+  );
 }
-
 
 function DashboardContent({ children }) {
   const [open, setOpen] = React.useState(false);
@@ -168,8 +169,8 @@ export default function Dashboard({ children }) {
 
   const router = useRouter();
   if (router.pathname !== "/") {
-    return <DashboardContent children={children} />
+    return <DashboardContent>{children}</DashboardContent>;
   } else {
-    return <HomePageContent children={children} />;
+    return <HomePageContent>{children}</HomePageContent>;
   }
 }

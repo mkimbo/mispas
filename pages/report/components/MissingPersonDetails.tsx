@@ -36,7 +36,7 @@ export default function MissingPersonDetails() {
     if (imageFile) {
       setSuccess(true);
     }
-  }, []);
+  }, [getValues, setSuccess]);
 
   return (
     <Grid container spacing={3} sx={{}}>

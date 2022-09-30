@@ -43,10 +43,11 @@ const CircularIntegration: React.FunctionComponent<IProps> = ({
   };
 
   React.useEffect(() => {
+    const tim = timer;
     return () => {
-      clearTimeout(timer.current);
+      clearTimeout(tim.current);
     };
-  }, []);
+  }, [timer]);
 
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -121,7 +122,9 @@ const CircularIntegration: React.FunctionComponent<IProps> = ({
           disabled={loading}
           onClick={handleClick}
         >
-          {success ? t("Upload successful") : t("Upload person image")}
+          {success
+            ? t("Upload successful")
+            : t("Upload person image")}
         </Button>
         {loading && (
           <CircularProgress

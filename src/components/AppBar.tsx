@@ -53,7 +53,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
     } else {
       dispatch({ type: "SET_LANG_CODE", payload: "en" });
     }
-  }, []);
+  }, [dispatch]);
   const handleProfileMenuOpen = (
     event: React.MouseEvent<HTMLElement>
   ) => {
@@ -132,7 +132,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <Link href="/profile">
+      <Link passHref href="/profile">
         <MenuItem onClick={handleProfileMenuOpen}>
           <IconButton
             size="large"
@@ -146,7 +146,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
           <p>{t("Profile")}</p>
         </MenuItem>
       </Link>
-      <Link href="/settings">
+      <Link passHref href="/settings">
         <MenuItem>
           <IconButton
             size="large"

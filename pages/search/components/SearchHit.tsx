@@ -5,10 +5,11 @@ import Image from "next/image";
 import sampleMissing from "../../../public/missing-person.webp";
 import { useTranslation } from "../../../src/i18n";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function SearchHit({ hit }) {
   const t = useTranslation();
-  console.log(hit, "hit");
+  const router = useRouter();
   const truncateText = (str: string, n: number, b?: boolean) => {
     if (str.length <= n) {
       return str;
@@ -35,63 +36,65 @@ function SearchHit({ hit }) {
   });
 
   return (
-    <StyledCard elevation={0} key={hit?.objectID}>
-      <Link href={`/case/${hit?.objectID}`}>
-        <CardActionArea>
-          <StyledImageWrapper>
-            <Image
-              src={hit?.image ? hit?.image : sampleMissing}
-              alt={hit?.fullname}
-              width="250px"
-              height="200px"
-            />
-          </StyledImageWrapper>
-          <StyledContentWrapper>
-            <Typography
-              color="primary"
-              sx={{ fontWeight: 700 }}
-              variant="subtitle1"
-            >
-              {hit?.fullname}
-            </Typography>
-            <Typography variant="body1" color="textPrimary">
-              <span>
-                <span style={{ fontWeight: 600 }}>
-                  {t("search.age.label")}{" "}
-                </span>
-                12
-              </span>{" "}
-              <span>
-                <span style={{ fontWeight: 600 }}>
-                  {t("search.complexion.label")}{" "}
-                </span>
-                dark
+    <StyledCard
+      elevation={0}
+      key={hit?.objectID}
+      onClick={() => router.push(`/case/${hit?.objectID}`)}
+    >
+      <CardActionArea>
+        <StyledImageWrapper>
+          <Image
+            src={hit?.image ? hit?.image : sampleMissing}
+            alt={hit?.fullname}
+            width="250px"
+            height="200px"
+          />
+        </StyledImageWrapper>
+        <StyledContentWrapper>
+          <Typography
+            color="primary"
+            sx={{ fontWeight: 700 }}
+            variant="subtitle1"
+          >
+            {hit?.fullname}
+          </Typography>
+          <Typography variant="body1" color="textPrimary">
+            <span>
+              <span style={{ fontWeight: 600 }}>
+                {t("search.age.label")}{" "}
               </span>
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                display: "inline-flex",
-                alignItems: "baseline",
-                marginTop: "5px",
-              }}
-            >
-              <span>
-                <LocationOnIcon
-                  sx={{ verticalAlign: "middle" }}
-                  fontSize="small"
-                />
-              </span>{" "}
-              <span>
-                {truncateText(
-                  "Fairfield Academy - Kiembeni, Kiembeni Road, Kiembeni, Mombasa",
-                  35
-                )}
+              12
+            </span>{" "}
+            <span>
+              <span style={{ fontWeight: 600 }}>
+                {t("search.complexion.label")}{" "}
               </span>
-            </Typography>
-          </StyledContentWrapper>
-        </CardActionArea>
-      </Link>
+              dark
+            </span>
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              display: "inline-flex",
+              alignItems: "baseline",
+              marginTop: "5px",
+            }}
+          >
+            <span>
+              <LocationOnIcon
+                sx={{ verticalAlign: "middle" }}
+                fontSize="small"
+              />
+            </span>{" "}
+            <span>
+              {truncateText(
+                "Fairfield Academy - Kiembeni, Kiembeni Road, Kiembeni, Mombasa",
+                35
+              )}
+            </span>
+          </Typography>
+        </StyledContentWrapper>
+      </CardActionArea>
     </StyledCard>
   );
 }

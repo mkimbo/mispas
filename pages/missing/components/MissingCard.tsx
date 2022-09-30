@@ -5,9 +5,11 @@ import Image from "next/image";
 import sampleMissing from "../../../public/missing-person.webp";
 import { useTranslation } from "../../../src/i18n";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function MissingCard({ item }) {
   const t = useTranslation();
+  const router = useRouter();
   const truncateText = (str: string, n: number, b?: boolean) => {
     if (str.length <= n) {
       return str;
@@ -34,65 +36,67 @@ function MissingCard({ item }) {
   });
 
   return (
-    <StyledCard elevation={0} key={item?.id}>
-      <Link href={`/missing/${item?.id}`}>
-        <CardActionArea>
-          <StyledImageWrapper>
-            <Image
-              src={item?.image ? item?.image : sampleMissing}
-              alt={item?.fullname}
-              width="250px"
-              height="200px"
-            />
-          </StyledImageWrapper>
-          <StyledContentWrapper>
-            <Typography
-              color="primary"
-              sx={{ fontWeight: 700 }}
-              variant="subtitle1"
-            >
-              {item?.fullname}
-            </Typography>
-            <Typography variant="body1" color="textPrimary">
-              <span>
-                <span style={{ fontWeight: 600 }}>
-                  {t("search.age.label")}{" "}
-                </span>
-                {item?.age}
-              </span>{" "}
-              <span>
-                <span style={{ fontWeight: 600 }}>
-                  {t("search.complexion.label")}{" "}
-                </span>
-                {item?.complexion}
+    <StyledCard
+      elevation={0}
+      key={item?.id}
+      onClick={() => router.push(`/missing/${item?.id}`)}
+    >
+      <CardActionArea>
+        <StyledImageWrapper>
+          <Image
+            src={item?.image ? item?.image : sampleMissing}
+            alt={item?.fullname}
+            width="250px"
+            height="200px"
+          />
+        </StyledImageWrapper>
+        <StyledContentWrapper>
+          <Typography
+            color="primary"
+            sx={{ fontWeight: 700 }}
+            variant="subtitle1"
+          >
+            {item?.fullname}
+          </Typography>
+          <Typography variant="body1" color="textPrimary">
+            <span>
+              <span style={{ fontWeight: 600 }}>
+                {t("search.age.label")}{" "}
               </span>
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                display: "inline-flex",
-                alignItems: "baseline",
-                marginTop: "5px",
-              }}
-            >
-              <span>
-                <LocationOnIcon
-                  sx={{ verticalAlign: "middle" }}
-                  fontSize="small"
-                />
-              </span>{" "}
-              <span>
-                {truncateText(
-                  item?.lastSeenLocation?.address
-                    ? item?.lastSeenLocation?.address
-                    : "Mombasa, Kenya",
-                  35
-                )}
+              {item?.age}
+            </span>{" "}
+            <span>
+              <span style={{ fontWeight: 600 }}>
+                {t("search.complexion.label")}{" "}
               </span>
-            </Typography>
-          </StyledContentWrapper>
-        </CardActionArea>
-      </Link>
+              {item?.complexion}
+            </span>
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              display: "inline-flex",
+              alignItems: "baseline",
+              marginTop: "5px",
+            }}
+          >
+            <span>
+              <LocationOnIcon
+                sx={{ verticalAlign: "middle" }}
+                fontSize="small"
+              />
+            </span>{" "}
+            <span>
+              {truncateText(
+                item?.lastSeenLocation?.address
+                  ? item?.lastSeenLocation?.address
+                  : "Mombasa, Kenya",
+                35
+              )}
+            </span>
+          </Typography>
+        </StyledContentWrapper>
+      </CardActionArea>
     </StyledCard>
   );
 }

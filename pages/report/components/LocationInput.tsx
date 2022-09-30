@@ -115,7 +115,7 @@ export default function LocationInput({
 
   React.useEffect(() => {
     setDefaultValue(getValues("LastSeenLocation"));
-  }, []);
+  }, [getValues, setDefaultValue]);
 
   return (
     <Controller

@@ -102,7 +102,7 @@ export default function Home() {
         ),
       },
     ],
-    []
+    [t]
   );
 
   return (
