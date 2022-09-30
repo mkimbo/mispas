@@ -3,7 +3,11 @@ import { TUserDevice } from "../../pages/api/report/missing";
 
 // get this JSON from the Firebase board
 // you can also store the values in environment variables
-import serviceAccount from "./AdminSA.json";
+//import serviceAccount from "./AdminSA.json";
+
+const serviceAccount = JSON.parse(
+  process.env.NEXT_PUBLIC_FIREBASE_ADMIN_KEY as string
+);
 
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
