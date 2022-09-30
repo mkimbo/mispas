@@ -23,7 +23,7 @@ export default function AppLayout({ children }) {
 					<span>This is default layout</span>
 					<span>{auth.user?.displayName}</span>
 				</nav> */}
-        <NavBar />
+        {/* <NavBar /> */}
         {children}
       </main>
     );

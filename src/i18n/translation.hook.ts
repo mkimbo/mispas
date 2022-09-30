@@ -12,7 +12,10 @@ export type TLangCode = "en" | "sw";
 
 export const useTranslation = () => {
   const langCode = useLangCode();
-  return useCallback(translate.bind(null, langCode), [langCode]);
+  return useCallback(
+    () => translate.bind(null, langCode),
+    [langCode]
+  );
 };
 
 export const useLangCode = () => useAppContext().langCode;
