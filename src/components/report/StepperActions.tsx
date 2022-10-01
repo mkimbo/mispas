@@ -6,14 +6,20 @@ import {
 } from "react-places-autocomplete";
 import { getGeoHash, loadScript } from "../../../src/utils/functions";
 import { uploadFileToCloud } from "../../../src/utils/firebase";
-import { TFormState } from "../hooks/useStepper";
+//import { TFormState, TStep2Form  } from "../hook/useStepper";
 import { UseFormHandleSubmit } from "react-hook-form";
-import { TStep1Form, TStep2Form } from "../missing";
-import { saveData } from "../missing";
+//import { TStep1Form, TStep2Form } from "../missing";
+//import { saveData } from "../missing";
 import useAuth from "../../../src/hook/auth";
 import { useRouter } from "next/router";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
+import {
+  TStep1Form,
+  TStep2Form,
+  saveData,
+} from "../../../pages/report/missing";
+import { TFormState } from "../../hook/report/useStepper";
 
 interface IProps {
   state: TFormState;

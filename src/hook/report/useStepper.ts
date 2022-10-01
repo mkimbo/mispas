@@ -1,5 +1,6 @@
 import { useReducer } from "react";
-import { IReportMissing } from "../missing";
+import { IReportMissing } from "../../../pages/report/missing";
+//import { IReportMissing } from "../missing";
 
 export type TFormState = {
   activeStep: number;
