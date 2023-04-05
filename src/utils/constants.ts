@@ -1,0 +1,9 @@
+export const placeholderUrl =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8X8IwDQAF+AILf7WxgQAAAABJRU5ErkJggg==";
+export const MAX_FILE_SIZE = 200000;
+export const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
