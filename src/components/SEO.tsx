@@ -1,6 +1,6 @@
 import React from "react";
 import { NextSeo } from "next-seo";
-import { TPerson } from "../../pages/missing/[id]";
+import { TPerson } from "../../models/missing_person.model";
 interface SEOProps {
   title: string;
   description: string;
