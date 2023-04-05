@@ -12,7 +12,7 @@ import { Check } from "@mui/icons-material";
 import Image from "next/image";
 import { placeholderUrl } from "../utils/constants";
 import sampleMissing from "../../public/missing-person.webp";
-import { TPerson } from "../../pages/missing/[id]";
+import { TPerson } from "../../models/missing_person.model";
 
 interface IReportSightingButtonProps {
   person: TPerson;
