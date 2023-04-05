@@ -1,25 +1,17 @@
-import { firebaseAdmin } from "../../../src/config/firebaseAdmin";
+import { AuthUser, getUserFromCookies } from "next-firebase-auth";
+import initAuth from "../../../utils/initAuth";
 import { nanoid } from "nanoid";
 import { NextApiRequest, NextApiResponse } from "next";
-import { sendNotifications } from "../../../src/service/NotificationService";
+import { firebaseAdmin } from "../../../config/firebaseAdmin";
+import { sendNotifications } from "../../../service/NotificationService";
 const db = firebaseAdmin.firestore();
-type TNotification = {
-  title: string;
-  body: string;
-  icon: string;
-  click_action: string;
-};
-export type TNotificationInput = {
-  center: number[];
-  radius?: number;
-  notification: TNotification;
-};
-export type TUserDevice = {
-  token: string;
-  userId: string;
-};
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+initAuth();
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  let user: AuthUser;
   try {
+    user = await getUserFromCookies({ req });
+    if (!user) return res.status(403).json({ error: "Not authorized" });
     if (req.method === "POST") {
       const docID = nanoid();
       const data = req.body;
@@ -45,10 +37,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         .set(data, { merge: true });
       res.status(200).json({ id: docID });
     }
-    res.status(200).end();
   } catch (e) {
-    console.log(e, "error");
-
+    // eslint-disable-next-line no-console
+    console.error(e);
     res.status(400).end();
   }
 };
+
+export default handler;

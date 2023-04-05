@@ -1,11 +1,8 @@
+import React from "react";
 import { Button, Typography, Card } from "@mui/material";
-import missingBg from "../src/assets/missing-bg.jpg";
-import {
-  useAppContext,
-  useAppDispatch,
-} from "../src/context/GlobalContext";
+import missingBg from "../assets/missing-bg.jpg";
 
-import { useTranslation } from "../src/i18n";
+//import { useTranslation } from "../src/i18n";
 import styled from "@emotion/styled";
 import {
   ArrowForward,
@@ -16,10 +13,19 @@ import {
 } from "@mui/icons-material";
 import { useMemo } from "react";
 import { useRouter } from "next/router";
-export default function Home() {
+import {
+  useAuthUser,
+  withAuthUser,
+  withAuthUserTokenSSR,
+} from "next-firebase-auth";
+import { useTranslation } from "../i18n";
+
+type Props = {};
+
+function HomePage() {
+  const AuthUser = useAuthUser();
   const t = useTranslation();
   const router = useRouter();
-
   const HeroCard = styled(Card)({
     textAlign: "left",
     height: "300px",
@@ -33,28 +39,29 @@ export default function Home() {
     position: "absolute",
     bottom: 0,
     left: 0,
+    width: "100%",
   });
   const LinkSection = styled("div")({
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 250px)",
-    gap: "10px",
-    justifyContent: "space-around",
-    width: "100%",
+    gridTemplateColumns: "repeat(4, 1fr)",
+    //gap: "10px",
+    justifyContent: "stretch",
+    //width: "100%",
     marginTop: "20px",
   });
   const LinkCard = styled(Card)({
     background: "transparent",
     textAlign: "center",
     width: "210px",
+    margin: "0 auto",
     height: "160px",
     padding: "10px",
-    margin: "auto",
   }) as typeof Card;
 
   const GridItem = styled("div")({
-    width: "250px",
-    textAlign: "center",
+    width: "100%",
   });
+
   const data = useMemo(
     () => [
       {
@@ -62,10 +69,7 @@ export default function Home() {
         description: t("homepage.linkCard.reportCaseText"),
         link: "/report/missing",
         icon: (
-          <CrisisAlert
-            color="primary"
-            sx={{ height: "60px", width: "60px" }}
-          />
+          <CrisisAlert color="primary" sx={{ height: "60px", width: "60px" }} />
         ),
       },
       {
@@ -95,14 +99,11 @@ export default function Home() {
         description: t("homepage.linkCard.statisticsText"),
         link: "/statistics",
         icon: (
-          <BarChart
-            color="primary"
-            sx={{ height: "60px", width: "60px" }}
-          />
+          <BarChart color="primary" sx={{ height: "60px", width: "60px" }} />
         ),
       },
     ],
-    [t]
+    []
   );
 
   return (
@@ -127,31 +128,33 @@ export default function Home() {
       </HeroCard>
       <LinkSection>
         {data.map((item) => (
-          <GridItem key={item.link}>
-            <LinkCard elevation={0}>
-              <Typography
-                component="div"
-                sx={{ textAlign: "center" }}
-                gutterBottom
-              >
-                {item.icon}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                {item.description}
-              </Typography>
-              <Button
-                size="small"
-                variant="text"
-                sx={{ textTransform: "none" }}
-                endIcon={<ArrowForward />}
-                onClick={() => router.push(item.link)}
-              >
-                {item.title}
-              </Button>
-            </LinkCard>
-          </GridItem>
+          <LinkCard key={item.link} elevation={0}>
+            <Typography
+              component="div"
+              sx={{ textAlign: "center" }}
+              gutterBottom
+            >
+              {item.icon}
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {item.description}
+            </Typography>
+            <Button
+              size="small"
+              variant="text"
+              sx={{ textTransform: "none" }}
+              endIcon={<ArrowForward />}
+              onClick={() => router.push(item.link)}
+            >
+              {item.title}
+            </Button>
+          </LinkCard>
         ))}
       </LinkSection>
     </div>
   );
 }
+
+export const getServerSideProps = withAuthUserTokenSSR()();
+
+export default withAuthUser()(HomePage);

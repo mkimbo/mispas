@@ -1,17 +1,17 @@
 import React from "react";
-import { Box, Container, Typography } from "@mui/material";
-import {
-  where,
-  getDocs,
-  query,
-  collection,
-} from "firebase/firestore";
-import { db } from "../../src/utils/firebase";
-import { useTranslation } from "../../src/i18n";
+import { Box, Container } from "@mui/material";
+import { useTranslation } from "../../i18n";
 import { styled } from "@mui/material";
-import Image from "next/image";
-import axios from "axios";
-import MissingCard from "../../src/components/missing/MissingCard";
+import MissingCard from "./components/MissingCard";
+import {
+  useAuthUser,
+  withAuthUser,
+  withAuthUserSSR,
+  AuthAction,
+} from "next-firebase-auth";
+import AppLayout from "../../layout/AppLayout";
+import getAbsoluteURL from "../../utils/getAbsoluteURL";
+import { fetcher } from "../../utils/axios";
 
 const MissingPeople = styled("div")({
   display: "grid",
@@ -21,49 +21,46 @@ const MissingPeople = styled("div")({
   width: "100%",
 });
 
-function Missing(props) {
+function Missing(props: any) {
+  const authUser = useAuthUser();
   const { missingPeople } = props;
   const t = useTranslation();
   return (
-    <Container component="main" maxWidth="lg">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <h6>Missing people</h6>
-        <MissingPeople>
-          {missingPeople.map((missingPerson) => {
-            return (
-              <MissingCard
-                key={missingPerson.id}
-                item={missingPerson}
-              />
-            );
-          })}
-        </MissingPeople>
-      </Box>
-    </Container>
+    <AppLayout email={authUser.email} signOut={authUser.signOut}>
+      <Container component="main" maxWidth="lg">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <h6>Missing people</h6>
+          <MissingPeople>
+            {missingPeople.map((missingPerson) => {
+              return (
+                <MissingCard key={missingPerson.id} item={missingPerson} />
+              );
+            })}
+          </MissingPeople>
+        </Box>
+      </Container>
+    </AppLayout>
   );
 }
 
-export default Missing;
-
-export const getStaticProps = async () => {
-  const q = query(
-    collection(db, "reported_missing"),
-    where("found", "==", false)
-  );
-
-  const querySnapshot = await getDocs(q);
-  const missingPeople = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+export const getServerSideProps = withAuthUserSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+})(async ({ AuthUser, req }) => {
+  const token = await AuthUser.getIdToken();
+  const endpoint = getAbsoluteURL("/api/missing", req);
+  const response = await fetcher(endpoint, token);
+  const data: any[] = await response.json();
   return {
-    props: { missingPeople },
-    revalidate: 10,
+    props: { missingPeople: data },
   };
-};
+});
+
+export default withAuthUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(Missing);

@@ -1,9 +1,10 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Container, Typography } from "@mui/material";
+import { useTranslation } from "../i18n";
 
 const AboutPage = () => {
+  const t = useTranslation();
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -13,7 +14,9 @@ const AboutPage = () => {
           flexDirection: "column",
           alignItems: "center",
         }}
-      ></Box>
+      >
+        <Typography>{t("About Page")}</Typography>
+      </Box>
     </Container>
   );
 };

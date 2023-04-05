@@ -13,17 +13,19 @@ import {
   Switch,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import { useTranslation } from "../src/i18n";
+import { useTranslation } from "../i18n";
 import { styled } from "@mui/material";
+import { useAppContext, useAppDispatch } from "../context/GlobalContext";
+import AllowNotifications from "../components/AllowNotifications";
+import GetLocation from "../components/GetLocation";
+import ToggleTheme from "../components/ToggleTheme";
 import {
-  useAppContext,
-  useAppDispatch,
-} from "../src/context/GlobalContext";
-import AllowNotifications from "../src/components/AllowNotifications";
-import GetLocation from "../src/components/GetLocation";
-import ToggleTheme from "../src/components/ToggleTheme";
-import useAuth from "../src/hook/auth";
-import { withProtected } from "../src/hook/route";
+  AuthAction,
+  useAuthUser,
+  withAuthUser,
+  withAuthUserSSR,
+} from "next-firebase-auth";
+import AppLayout from "../layout/AppLayout";
 
 const SettingCard = styled(Card)({
   width: "100%",
@@ -63,8 +65,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       },
       "& + .MuiSwitch-track": {
         opacity: 1,
-        backgroundColor:
-          theme.palette.mode === "dark" ? "#8796A5" : "#aab4be",
+        backgroundColor: theme.palette.mode === "dark" ? "#8796A5" : "#aab4be",
       },
     },
   },
@@ -88,117 +89,138 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   "& .MuiSwitch-track": {
     opacity: 1,
-    backgroundColor:
-      theme.palette.mode === "dark" ? "#8796A5" : "#aab4be",
+    backgroundColor: theme.palette.mode === "dark" ? "#8796A5" : "#aab4be",
     borderRadius: 20 / 2,
   },
 }));
 
 function Settings() {
+  const authUser = useAuthUser();
   const dispatch = useAppDispatch();
   const state = useAppContext();
   const t = useTranslation();
-  const auth = useAuth();
-  console.log(auth.user, "auth");
   return (
-    <Container component="main" maxWidth="md">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4" component="h1" gutterBottom>
-          {t("Settings")}
-        </Typography>
-        <SettingCard>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Location
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              This will allow the system to filter alerts and only
-              send you those near your current location. We will not
-              disclose your location to any third party. This setting
-              is required for the basic functionality of the app.
-            </Typography>
-          </CardContent>
-          <CardButtons>
-            <GetLocation />
-          </CardButtons>
-        </SettingCard>
-        <SettingCard>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Notifications
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              This will allow you to receive a notification whenever
-              someone near your current location creates a missing
-              person alert. We will not spam you with needless
-              notifications of cases far from you. This setting is
-              required for the basic functionality of the app.
-            </Typography>
-          </CardContent>
-          <CardButtons>
-            <AllowNotifications />
-          </CardButtons>
-        </SettingCard>
-        <SettingCard>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {t("Language")}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {t(
-                "Choose your prefered language. This will change the language of the app."
-              )}
-            </Typography>
-          </CardContent>
-          <CardButtons>
-            <Button
-              startIcon={state.langCode === "en" && <CheckIcon />}
-              variant={
-                state.langCode === "en" ? "contained" : "outlined"
-              }
-              size="large"
-              onClick={() =>
-                dispatch({ type: "SET_LANG_CODE", payload: "en" })
-              }
-            >
-              {t("English")}
-            </Button>
-            <Button
-              startIcon={state.langCode === "sw" && <CheckIcon />}
-              variant={
-                state.langCode === "sw" ? "contained" : "outlined"
-              }
-              size="large"
-              onClick={() =>
-                dispatch({ type: "SET_LANG_CODE", payload: "sw" })
-              }
-            >
-              {t("Swahili")}
-            </Button>
-          </CardButtons>
-        </SettingCard>
-        <SettingCard>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {t("Theme")}
-            </Typography>
-            <ThemeCard>
-              <Typography variant="body2" color="text.secondary">
-                {t("Switch between light and dark theme.")}
+    <AppLayout email={authUser.email} signOut={authUser.signOut}>
+      <Container component="main" maxWidth="md">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h4" component="h1" gutterBottom>
+            {t("Settings")}
+          </Typography>
+          <SettingCard>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Location
               </Typography>
-              <ToggleTheme />
-            </ThemeCard>
-          </CardContent>
-        </SettingCard>
-      </Box>
-    </Container>
+              <Typography variant="body2" color="text.secondary">
+                This will allow the system to filter alerts and only send you
+                those near your current location. We will not disclose your
+                location to any third party. This setting is required for the
+                basic functionality of the app.
+              </Typography>
+            </CardContent>
+            <CardButtons>
+              <GetLocation />
+            </CardButtons>
+          </SettingCard>
+          <SettingCard>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Notifications
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                This will allow you to receive a notification whenever someone
+                near your current location creates a missing person alert. We
+                will not spam you with needless notifications of cases far from
+                you. This setting is required for the basic functionality of the
+                app.
+              </Typography>
+            </CardContent>
+            <CardButtons>
+              <AllowNotifications />
+            </CardButtons>
+          </SettingCard>
+          <SettingCard>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {t("Language")}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t(
+                  "Choose your prefered language. This will change the language of the app."
+                )}
+              </Typography>
+            </CardContent>
+            <CardButtons>
+              <Button
+                startIcon={state.langCode === "en" && <CheckIcon />}
+                variant={state.langCode === "en" ? "contained" : "outlined"}
+                size="large"
+                onClick={() =>
+                  dispatch({ type: "SET_LANG_CODE", payload: "en" })
+                }
+              >
+                {t("English")}
+              </Button>
+              <Button
+                startIcon={state.langCode === "sw" && <CheckIcon />}
+                variant={state.langCode === "sw" ? "contained" : "outlined"}
+                size="large"
+                onClick={() =>
+                  dispatch({ type: "SET_LANG_CODE", payload: "sw" })
+                }
+              >
+                {t("Swahili")}
+              </Button>
+            </CardButtons>
+          </SettingCard>
+          <SettingCard>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {t("Theme")}
+              </Typography>
+              <ThemeCard>
+                <Typography variant="body2" color="text.secondary">
+                  {t("Switch between light and dark theme.")}
+                </Typography>
+                <ToggleTheme />
+              </ThemeCard>
+            </CardContent>
+          </SettingCard>
+        </Box>
+      </Container>
+    </AppLayout>
   );
 }
 
-export default withProtected(Settings);
+export const getServerSideProps = withAuthUserSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+})(async ({ AuthUser, req }) => {
+  const token = await AuthUser.getIdToken();
+  /*   const response = await fetch(endpoint, {
+    method: "GET",
+    headers: {
+      Authorization: token || "unauthenticated",
+    },
+  });
+  //const data: DataType = await response.json();
+  if (!response.ok) {
+    throw new Error(
+      `Data fetching failed with status ${response.status}: ${JSON.stringify(
+        data
+      )}`
+    );
+  } */
+  return {
+    props: {},
+  };
+});
+
+export default withAuthUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(Settings);

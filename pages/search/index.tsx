@@ -1,14 +1,16 @@
 import React from "react";
+import {
+  useAuthUser,
+  withAuthUser,
+  withAuthUserSSR,
+  AuthAction,
+} from "next-firebase-auth";
 import { Box, Container, Typography } from "@mui/material";
 import algoliasearch from "algoliasearch/lite";
-import {
-  InstantSearch,
-  SearchBox,
-  Hits,
-} from "react-instantsearch-hooks-web";
-import SearchHit from "../../src/components/search/SearchHit";
-import { useTranslation } from "../../src/i18n";
-import { withProtected } from "../../src/hook/route";
+import { InstantSearch, SearchBox, Hits } from "react-instantsearch-hooks-web";
+import SearchHit from "./components/SearchHit";
+import { useTranslation } from "../../i18n";
+import AppLayout from "../../layout/AppLayout";
 
 const searchClient = algoliasearch(
   "CL1J39H1NX",
@@ -16,30 +18,35 @@ const searchClient = algoliasearch(
 );
 
 function Search() {
+  const auth = useAuthUser();
   const t = useTranslation();
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        overflowY: "auto",
-      }}
-      component="main"
-      maxWidth="lg"
-    >
-      <InstantSearch
-        searchClient={searchClient}
-        indexName={"reported_missing"}
+    <AppLayout email={auth.email} signOut={auth.signOut}>
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          overflowY: "auto",
+        }}
+        component="main"
+        maxWidth="lg"
       >
-        <Typography component="div" color="primary">
-          <SearchBox placeholder={t("search.placeholder.text")} />
-        </Typography>
+        <InstantSearch
+          searchClient={searchClient}
+          indexName={"reported_missing"}
+        >
+          <Typography component="div" color="primary">
+            <SearchBox placeholder={t("search.placeholder.text")} />
+          </Typography>
 
-        <Hits hitComponent={SearchHit} />
-      </InstantSearch>
-    </Container>
+          <Hits hitComponent={SearchHit} />
+        </InstantSearch>
+      </Container>
+    </AppLayout>
   );
 }
 
-export default withProtected(Search);
+export default withAuthUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(Search);

@@ -1,65 +1,36 @@
 import React from "react";
 import {
-  Box,
   Container,
   Typography,
   Step,
   Paper,
   Stepper,
   StepLabel,
-  Hidden,
-  Button,
 } from "@mui/material";
-import { useTranslation } from "../../src/i18n";
-//import { styled } from "@mui/system";
-import Image from "next/image";
+import { useTranslation } from "../../i18n";
+import {
+  useAuthUser,
+  withAuthUser,
+  AuthAction,
+  withAuthUserSSR,
+} from "next-firebase-auth";
+import AppLayout from "../../layout/AppLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  useForm,
-  FormProvider,
-  SubmitHandler,
-} from "react-hook-form";
-//import MissingPersonDetails from "../../src/components/missing/MissingPersonDetails";
+import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
+import MissingPersonDetails from "./components/MissingPersonDetails";
 import { merge } from "lodash";
-import { useStepper } from "../../src/hook/report/useStepper";
-import StepperActions from "../../src/components/report/StepperActions";
-import OtherDetails from "../../src/components/report/OtherDetails";
-import axios, { AxiosResponse } from "axios";
-import { withProtected } from "../../src/hook/route";
+import { useStepper } from "./hooks/useStepper";
+import StepperActions from "./components/StepperActions";
+import OtherDetails from "./components/OtherDetails";
 import Link from "next/link";
-import MissingPersonDetails from "../../src/components/report/MissingPersonDetails";
-type Props = {};
-
-export interface IReportMissing {
-  fullname: string;
-  age: number;
-  gender: string;
-  complexion: string;
-  image: File;
-  lastSeenLocation: string;
-  lastSeenDate: string;
-  lastWearing: string;
-  nickname: string;
-  obNumber: string;
-  phoneContact1: string;
-  phoneContact2: string;
-  policeStationName: string;
-  relationToReported: string;
-}
-
-export const saveData = async (data: any) => {
-  const response = await axios.post("/api/report/missing", data);
-  return response;
-};
-
-export const updateData = async (data: any) => {
-  const response = await axios.put("/api/report/missing", data);
-  return response;
-};
+import getAbsoluteURL from "../../utils/getAbsoluteURL";
+import { fetcher, fetchWithCookies } from "../../utils/axios";
+interface Props {}
 
 function ReportMissing({}: Props) {
   const t = useTranslation();
+  const auth = useAuthUser();
   const steps = [Step1, Step2, Step3];
   //const [activeStep, setActiveStep] = React.useState(0);
   const [state, dispatch] = useStepper();
@@ -72,7 +43,7 @@ function ReportMissing({}: Props) {
 
     return { ...defaultValues };
   };
-  const methods = useForm<TStep1Form | TStep2Form | any>({
+  const methods = useForm<TStep1Form | TStep2Form>({
     resolver: zodResolver(steps[state.activeStep].validationSchema),
     reValidateMode: "onChange",
     defaultValues: getDefaultValues(steps),
@@ -93,10 +64,10 @@ function ReportMissing({}: Props) {
               Your case has been reported succesfully.
             </Typography>
             <Typography variant="subtitle1">
-              Alerts will be sent out to nearby users in a few
-              minutes. You can view the new case using the link below.
+              Alerts will be sent out to nearby users in a few minutes. You can
+              view the new case using the link below.
             </Typography>
-            <Link href={`/case/${state?.newCaseID}`}>
+            <Link href={`/missing/${state?.newCaseID}`}>
               <a>View Case</a>
             </Link>
           </React.Fragment>
@@ -107,46 +78,75 @@ function ReportMissing({}: Props) {
   }
 
   return (
-    <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-      <FormProvider {...methods}>
-        <form>
-          <Paper
-            variant="outlined"
-            sx={{
-              my: { xs: 3, md: 2 },
-              p: { xs: 2, md: 2 },
-              backgroundColor: "transparent",
-            }}
-          >
-            <Typography component="h1" variant="h4" align="center">
-              Report A Missing Person
-            </Typography>
-            <Stepper
-              activeStep={state.activeStep}
-              alternativeLabel
-              sx={{ pt: 3, pb: 3 }}
+    <AppLayout email={auth.email} signOut={auth.signOut}>
+      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+        <FormProvider {...methods}>
+          <form>
+            <Paper
+              variant="outlined"
+              sx={{
+                my: { xs: 3, md: 2 },
+                p: { xs: 2, md: 2 },
+                backgroundColor: "transparent",
+              }}
             >
-              {steps.map((step) => (
-                <Step key={step.label}>
-                  <StepLabel>{step.label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            <React.Fragment>
-              {getStepContent(state.activeStep)}
-              <StepperActions
-                dispatch={dispatch}
-                steps={steps}
-                state={state}
-                handleSubmit={handleSubmit}
-              />
-            </React.Fragment>
-          </Paper>
-        </form>
-      </FormProvider>
-    </Container>
+              <Typography component="h1" variant="h4" align="center">
+                Report A Missing Person
+              </Typography>
+              <Stepper
+                activeStep={state.activeStep}
+                alternativeLabel
+                sx={{ pt: 3, pb: 3 }}
+              >
+                {steps.map((step) => (
+                  <Step key={step.label}>
+                    <StepLabel>{step.label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+              <React.Fragment>
+                {getStepContent(state.activeStep)}
+                <StepperActions
+                  auth={auth}
+                  dispatch={dispatch}
+                  steps={steps}
+                  state={state}
+                  handleSubmit={handleSubmit}
+                />
+              </React.Fragment>
+            </Paper>
+          </form>
+        </FormProvider>
+      </Container>
+    </AppLayout>
   );
 }
+
+export const getServerSideProps = withAuthUserSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+})(async ({ AuthUser, req }) => {
+  //const token = await AuthUser.getIdToken();
+  const endpoint = getAbsoluteURL("/api/get-user", req);
+  const response = await fetchWithCookies(endpoint, req.headers.cookie);
+  const data: any = await response.json();
+  console.log(data, "dataaa");
+  if (!data.phoneNumber?.verified) {
+    console.log("oooorigegjitrughirtghrtigrknknb");
+    return {
+      redirect: {
+        destination: "/add-phone-number",
+        permanent: true,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+});
+
+export default withAuthUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(ReportMissing);
 
 export type TStep1Form = {
   fullname: string;
@@ -227,27 +227,3 @@ const Step3 = {
     relationToReported: "Close Friend",
   },
 };
-
-export default withProtected(ReportMissing);
-
-/* email: z
-      .string()
-      .nonempty("The email is required.")
-      .email({ message: "The email is invalid." }),
-    confirmEmail: z.string(),
-    // interesting case : at first, no option radio are checked so this is null. So the error is "Expected string, received null".
-    // So we need to accept first string or null, in order to apply refine to set a custom message.
-    isDeveloper: z
-      .string()
-      .or(z.null())
-      .refine((val) => Boolean(val), {
-        message: "Please, make a choice!",
-      }),
-    //title: z.union([z.literal("Mr"), z.literal("Mrs"), z.literal("Miss"), z.literal("Dr")]),
-    title: z.enum(["Mr", "Mrs", "Miss", "Dr"]), */ // For educationnal purpose (it's overkill here, as the UI constrains it already with a select).
-
-// The refine method is used to add custom rules or rules over multiple fields.
-/* .refine((data) => data.email === data.confirmEmail, {
-    message: "Emails don't match.",
-    path: ["confirmEmail"], // Set the path of this error on the confirmEmail field.
-  }) */

@@ -1,25 +1,30 @@
-import { doc, getDoc } from "firebase/firestore";
+import { AuthUser, getUserFromCookies } from "next-firebase-auth";
+import initAuth from "../../../utils/initAuth";
 import { NextApiRequest, NextApiResponse } from "next";
-import { firebaseAdmin } from "../../../src/config/firebaseAdmin";
+import { firebaseAdmin } from "../../../config/firebaseAdmin";
+const db = firebaseAdmin.firestore();
+initAuth();
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const docID = req.body.id as string;
-  const db = firebaseAdmin.firestore();
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  let user: AuthUser;
   try {
-    if (req.method === "GET") {
-      const missingDoc = db.collection("reported_missing").doc(docID);
-      //const missingDoc = doc(db, `reported_missing/${id}`);
-      if (!missingDoc) {
-        res.status(404).end();
-      } else {
-        const snapShot = await missingDoc.get();
-        /* const snapShot = await getDoc(missingDoc);
-        const data = snapShot.data(); */
-        res.status(200).json(snapShot.data());
-      }
+    user = await getUserFromCookies({ req });
+    if (!user) return res.status(403).json({ error: "Not authorized" });
+    const docID = req.query.id as string;
+    const missingDoc = db.collection("reported_missing").doc(docID);
+    if (!missingDoc) {
+      res.status(404).json({ error: "Not Found" });
+    } else {
+      const snapShot = await missingDoc.get();
+      const data = snapShot.data();
+
+      res.status(200).json({ id: snapShot.id, ...data });
     }
-    res.status(200).end();
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
     res.status(400).end();
   }
 };
+
+export default handler;

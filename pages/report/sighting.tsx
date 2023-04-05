@@ -1,56 +1,34 @@
 import React from "react";
+import { Box, Container, Typography, Paper, Grid, Button } from "@mui/material";
 import {
-  Box,
-  Container,
-  Typography,
-  Paper,
-  Grid,
-  Button,
-  CircularProgress,
-} from "@mui/material";
-import { useTranslation } from "../../src/i18n";
-import { styled } from "@mui/system";
+  useAuthUser,
+  withAuthUser,
+  withAuthUserSSR,
+  AuthAction,
+} from "next-firebase-auth";
+import { useTranslation } from "../../i18n";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  useForm,
-  FormProvider,
-  SubmitHandler,
-} from "react-hook-form";
-import { withProtected } from "../../src/hook/route";
+import { useForm, FormProvider } from "react-hook-form";
 import { useRouter } from "next/router";
-import LocationInput from "../../src/components/report/LocationInput";
-import DateInput from "../../src/components/report/DateInput";
-import { fetcher } from "../../src/utils/axios";
-import useSWR from "swr";
-import { TPerson } from "../missing/[id]";
-import useAuth from "../../src/hook/auth";
-import axios, { AxiosResponse } from "axios";
+import LocationInput from "./components/LocationInput";
+import DateInput from "./components/DateInput";
+import { fetcher, saveSighting } from "../../utils/axios";
+import getAbsoluteURL from "../../utils/getAbsoluteURL";
+import AppLayout from "../../layout/AppLayout";
+import { TReportSighting } from "../../utils/models";
 
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-type Props = {};
-
-export type TReportSighting = {
-  sightingLocation: string;
-  sightingDate: string;
-};
+interface Props {
+  missingPerson: any;
+}
 
 const schema = z.object({
   sightingLocation: z.string().min(1),
   sightingDate: z.date(),
 });
 
-export const saveSighting = async (data: any) => {
-  const response = await axios.put("/api/report/sighting", data);
-  return response;
-};
-
-function ReportSighting({}: Props) {
-  const { user } = useAuth();
+function ReportSighting({ missingPerson }: Props) {
+  const auth = useAuthUser();
   const router = useRouter();
   const t = useTranslation();
   const id = router.query.personId as string;
@@ -59,79 +37,85 @@ function ReportSighting({}: Props) {
     reValidateMode: "onChange",
     defaultValues: { sightingLocation: "", sightingDate: "" },
   });
-  const { data, error } = useSWR(`/api/case/${id}`, fetcher);
-  if (error)
+
+  if (!missingPerson?.id)
     return (
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Typography>Error fetching data.</Typography>
-      </Box>
+      <AppLayout email={auth.email} signOut={auth.signOut}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Typography>Error fetching data.</Typography>
+        </Box>
+      </AppLayout>
     );
-  if (!data)
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <CircularProgress />
-      </Box>
-    );
-  const missingPerson = data;
-  console.log(missingPerson, "missing");
 
   const { handleSubmit } = methods;
   const handleSubmitSighting = async (data: TReportSighting) => {
     const response = await saveSighting({
       ...data,
       personId: id,
-      reporterID: user?.uid,
+      reporterID: auth.id,
     });
     if (response.status === 200) {
-      router.push(`/case/${id}`);
+      router.push(`/missing/${id}`);
     }
   };
   return (
-    <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-      <FormProvider {...methods}>
-        <form>
-          <Paper
-            variant="outlined"
-            sx={{
-              my: { xs: 3, md: 2 },
-              p: { xs: 2, md: 2 },
-              backgroundColor: "transparent",
-            }}
-          >
-            <Typography variant="h6" align="center" gutterBottom>
-              {t(
-                `Please tell us where you saw ${missingPerson?.fullname}`
-              )}
-            </Typography>
-            <Grid item xs={12} marginBottom="10px">
-              <LocationInput
-                name="sightingLocation"
-                label="Sighting location"
-              />
-            </Grid>
-            <Grid item xs={12} marginBottom="10px">
-              <DateInput
-                name="sightingDate"
-                label="Sighting date & time"
-              />
-            </Grid>
-            <Grid item xs={12} textAlign="right">
-              <Button
-                onClick={() => {
-                  handleSubmit((values) => {
-                    handleSubmitSighting(values);
-                  })();
-                }}
-                variant="contained"
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Paper>
-        </form>
-      </FormProvider>
-    </Container>
+    <AppLayout email={auth.email} signOut={auth.signOut}>
+      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+        <FormProvider {...methods}>
+          <form>
+            <Paper
+              variant="outlined"
+              sx={{
+                my: { xs: 3, md: 2 },
+                p: { xs: 2, md: 2 },
+                backgroundColor: "transparent",
+              }}
+            >
+              <Typography variant="h6" align="center" gutterBottom>
+                {t(`Please tell us where you saw ${missingPerson?.fullname}`)}
+              </Typography>
+              <Grid item xs={12} marginBottom="10px">
+                <LocationInput
+                  name="sightingLocation"
+                  label="Sighting location"
+                />
+              </Grid>
+              <Grid item xs={12} marginBottom="10px">
+                <DateInput name="sightingDate" label="Sighting date & time" />
+              </Grid>
+              <Grid item xs={12} textAlign="right">
+                <Button
+                  onClick={() => {
+                    handleSubmit((values) => {
+                      handleSubmitSighting(values);
+                    })();
+                  }}
+                  variant="contained"
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Paper>
+          </form>
+        </FormProvider>
+      </Container>
+    </AppLayout>
   );
 }
 
-export default withProtected(ReportSighting);
+export const getServerSideProps = withAuthUserSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+})(async ({ AuthUser, req, params, query }) => {
+  const token = await AuthUser.getIdToken();
+  const { personId } = query;
+  const endpoint = getAbsoluteURL(`/api/missing/${personId}`, req);
+  const response = await fetcher(endpoint, token);
+  const data: any = await response.json();
+  return {
+    props: { missingPerson: data },
+  };
+});
+
+export default withAuthUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(ReportSighting);

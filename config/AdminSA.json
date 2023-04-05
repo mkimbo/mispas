@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "mispas-8a699",
+  "private_key_id": "57840e0196b84482caa34692548c62b86de429cc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQD6fSLohMtWRq9b\nF6IjlQXO6oM5twEU2deG3G/94HSsvGKnF1OIIAA5jYp0tUe0/lLD96u/SLRaE6wq\n9xOvJ7jv/oTVGYIzCGKExC/QlGWALx+sr+eV8kNJhKriygfLwLet7ykY1pFNBLlN\n4yswVVTAY/LWIu576QHvgdIWvOt/EVxB1kNvN394n2i/5lcOLkQtFek9gVM5B7ns\ngan8B/mCzIOWIFXJXB5KI950LqczNVev2gD6LOxDGvVpmmd003FMAKCU0ZlY/FOI\nayJWUVPHz94YCB99KW1ST5MFqRLUnZcszf9N/5fT3RhN0BafXhGsBShHjVhGDb43\nlsf3uKyvAgMBAAECggEAVUjM3WD1QFNBuiCSTk4bU6dp9XkXD6vZ42tjYAuPfg6I\nAj8BbEwE95N27CSanQeoU1ucqLyO10pyaJCGLbE3GNNOE6YjO8/jhzOq2ffklR+2\nR5v+nAGHolzet+e0fs2HXFuc4P2RLClrFBc/6a1r9TMyh3EORLcBNzQ6vQ4mmjS5\nBSd80xDo8CIaZyBkZRzRva8XZX/4hFvO5+I9pu9iv8+K8ABhnWJc8YgIs5dEYj3d\nGQ9wSw7GrF6d2SJd0AkeYLaXRbwQilF9VCf1p7/jSSEQsuDRtcGaPQShuTRAapx2\nnV97bpxHtRrOHHV1uOZ6RSEZgWaxZxyuqsvr6zI6dQKBgQD+4aBnTJF3yNbzgCEk\nD5aSD64cYojib4ke6eq4HeIQICugFx7bSZdjGuUbpQXAVq/Y+S9bRKCKP7U/hopw\n2FQ4ILX9gdUeNklu4X/ulEXYq4vfNJMwCOqNADvaD/8ns5zyoUCq+QWFCNjdwYNG\nS6G/gMPy84QDGKicl8RVjDsmawKBgQD7lpMTxzZ5NdNub/P31x4gB9yAWmmmI05k\nuVhZL0ohITTwAbxLtayN2E9I9FIeT0mbwJQoCoQEOIlNdrXGkdzGLawrB5zeXxvf\nwF421I/DQ1xzupoGsn/kog5SXYWxBTdyMsMrCj13mFRHOPjEZCO5WtKgHibdvEb6\nOJCulRD7zQKBgQDctyXgTj3qLNF3K42HXLhW450yl2FSNKPZUVcg+T+6FyGwEFV4\nL9IY0EF2HwFL/cVpbt/DeTpMfb7GtAtOjQbhU/JFBRk4gGo2yq+uOlgBuQv2zeBn\nyFDUqU8rFo8uIivXMCx/4gUVnwOthNXZGcWHwEnvKVE4HTJl6EbsjfLq4QKBgQCk\n89eguxerJzBmEz75O3DD/YOEIENuq21luuQDLW9EA3qq9ehYF1h4c9+f7Ji+yKtx\nVDWPfz2JauwS/wc1l0MSKLXeTJJ8dg1Xic/70SglFVBTjIAabgROijYrqKfUJaBx\n3nh6Cq+8bwKq496vHR0TFUpNsxc2gJBk1Jt/67qD7QKBgQCxgEpoNPQvyS+RQYhj\nMoU9OzFrxqBzrKTyo3wL6Phnrv3BW9tR1dJ49fyDhN8lHYvMQd92ipJjR4tKuYB0\nDl6nshrCDXmldHE5j+XzbBWQPMJffIFAQIotqkB6xscvZ9AejRoXUaMlwngOwhkz\ns1Xw/xnySKkf7GgE2lQZcvlVhQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "mispas-server-admin@mispas-8a699.iam.gserviceaccount.com",
+  "client_id": "112503536453356219485",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mispas-server-admin%40mispas-8a699.iam.gserviceaccount.com"
+}
