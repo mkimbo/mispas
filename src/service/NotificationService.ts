@@ -1,4 +1,4 @@
-import { TNotificationInput } from "../../pages/api/report/missing";
+import { TNotificationInput } from "../../utils/models";
 import {
   getUsersWithinRadiusOfCase,
   sendAlertToUserDevices,

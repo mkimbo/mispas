@@ -1,5 +1,5 @@
 import * as firebaseAdmin from "firebase-admin";
-import { TUserDevice } from "../../pages/api/report/missing";
+import { TUserDevice } from "../../utils/models";
 
 // get this JSON from the Firebase board
 // you can also store the values in environment variables

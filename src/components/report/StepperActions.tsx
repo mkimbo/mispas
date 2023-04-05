@@ -4,8 +4,8 @@ import {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
-import { getGeoHash, loadScript } from "../../../src/utils/functions";
-import { uploadFileToCloud } from "../../../src/utils/firebase";
+import { getGeoHash, loadScript } from "../../../utils/functions";
+import { uploadFileToCloud } from "../../../utils/firebase";
 //import { TFormState, TStep2Form  } from "../hook/useStepper";
 import { UseFormHandleSubmit } from "react-hook-form";
 //import { TStep1Form, TStep2Form } from "../missing";
@@ -17,9 +17,9 @@ import SaveIcon from "@mui/icons-material/Save";
 import {
   TStep1Form,
   TStep2Form,
-  saveData,
 } from "../../../pages/report/missing";
 import { TFormState } from "../../hook/report/useStepper";
+import { saveMissingPerson } from "../../../utils/axios";
 
 interface IProps {
   state: TFormState;
@@ -58,7 +58,7 @@ const StepperActions: FunctionComponent<IProps> = ({
       found: false,
       reporterId,
     };
-    const response = await saveData(missingPersonData);
+    const response = await saveMissingPerson(missingPersonData);
 
     if (response?.status == 200) {
       // dispatch({ type: "next" });
