@@ -17,9 +17,9 @@ import SaveIcon from "@mui/icons-material/Save";
 import {
   TStep1Form,
   TStep2Form,
-  saveData,
 } from "../../../pages/report/missing";
 import { TFormState } from "../../hook/report/useStepper";
+import { saveMissingPerson } from "../../../utils/axios";
 
 interface IProps {
   state: TFormState;
@@ -58,7 +58,7 @@ const StepperActions: FunctionComponent<IProps> = ({
       found: false,
       reporterId,
     };
-    const response = await saveData(missingPersonData);
+    const response = await saveMissingPerson(missingPersonData);
 
     if (response?.status == 200) {
       // dispatch({ type: "next" });
