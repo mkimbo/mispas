@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useFormContext, Controller } from "react-hook-form";
 import throttle from "lodash/throttle";
-import { loadScript } from "../../../src/utils/functions";
+import { loadScript } from "../../../utils/functions";
 
 const GOOGLE_MAPS_API_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;

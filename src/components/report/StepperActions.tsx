@@ -4,8 +4,8 @@ import {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
-import { getGeoHash, loadScript } from "../../../src/utils/functions";
-import { uploadFileToCloud } from "../../../src/utils/firebase";
+import { getGeoHash, loadScript } from "../../../utils/functions";
+import { uploadFileToCloud } from "../../../utils/firebase";
 //import { TFormState, TStep2Form  } from "../hook/useStepper";
 import { UseFormHandleSubmit } from "react-hook-form";
 //import { TStep1Form, TStep2Form } from "../missing";
