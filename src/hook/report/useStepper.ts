@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { IReportMissing } from "../../../pages/report/missing";
+import { IReportMissing } from "../../../utils/models";
 //import { IReportMissing } from "../missing";
 
 export type TFormState = {
