@@ -4,7 +4,7 @@ import { useTranslation } from "../i18n";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import axios from "axios";
 import useAuth from "../hook/auth";
-import { getGeoHash } from "../utils/functions";
+import { getGeoHash } from "../../utils/functions";
 
 type Props = {};
 
