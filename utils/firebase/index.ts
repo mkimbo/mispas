@@ -40,7 +40,7 @@ export const db = getFirestore(firebaseApp);
 export const auth = getAuth(firebaseApp);
 
 export const messaging =
-  environment == "production" ? getMessaging(firebaseApp) : null;
+  environment !== "development" ? getMessaging(firebaseApp) : null;
 
 export const uploadFileToCloud = async (file: File) => {
   try {

@@ -4,7 +4,7 @@ import { getApps, initializeApp } from "firebase/app";
 import localforage from "localforage";
 import { firebaseConfig } from "../config/firebase.config";
 import { getMessaging, getToken } from "firebase/messaging";
-
+const environment = process.env.NODE_ENV || "development";
 const firebaseCloudMessaging = {
   //checking whether token is available in indexed DB
   tokenInlocalforage: async () => {
@@ -17,7 +17,8 @@ const firebaseCloudMessaging = {
       ? initializeApp(firebaseConfig)
       : getApps()[0];
     try {
-      const messaging = getMessaging(app);
+      const messaging =
+        environment !== "development" ? getMessaging(app) : null;
       const tokenInLocalForage = await this.tokenInlocalforage();
 
       //if FCM token is already there just return the token
