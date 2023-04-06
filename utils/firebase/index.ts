@@ -30,7 +30,9 @@ import { addPhoneNumber } from "../axios";
 //import { Auth } from "googleapis";
 const environment = process.env.NODE_ENV || "development";
 const firebaseApp =
-  getApps().length === 1 ? getApps()[0] : initializeApp(firebaseConfig);
+  getApps().length === 1
+    ? getApps()[0]
+    : initializeApp(firebaseConfig);
 //firebase.initializeApp(firebaseConfig)
 
 export const storage = getStorage(firebaseApp);
@@ -38,13 +40,16 @@ export const db = getFirestore(firebaseApp);
 export const auth = getAuth(firebaseApp);
 
 export const messaging =
-  environment !== "development" ? getMessaging(firebaseApp) : null;
+  environment == "production" ? getMessaging(firebaseApp) : null;
 
 export const uploadFileToCloud = async (file: File) => {
   try {
     const fileName = `${Date.now()}-${file.name}`;
     const storageRef = ref(storage, "files/" + fileName);
-    const uploadTaskSnapshot = await uploadBytesResumable(storageRef, file);
+    const uploadTaskSnapshot = await uploadBytesResumable(
+      storageRef,
+      file
+    );
     const downloadUrl = await getDownloadURL(uploadTaskSnapshot.ref);
     return downloadUrl;
   } catch (error) {
@@ -115,7 +120,9 @@ export const onSendCode = async (phoneNumber: string) => {
 
 export const onVerifyCode = async (enteredCode: string) => {
   try {
-    const result = await window.confirmationResult.confirm(enteredCode);
+    const result = await window.confirmationResult.confirm(
+      enteredCode
+    );
     //await addPhoneNumber({ verified: true });
     return true;
   } catch (error) {
